@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  useColorScheme,
-} from 'react-native';
+import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 
-import { Colors, Header } from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
