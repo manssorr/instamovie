@@ -10,12 +10,12 @@ const MoviesList = () => {
   const fetchMovies = async () => {
     setIsLoading(true);
     const result = await getMovies();
-    setMovies(result.results);
+
     setIsLoading(false);
   };
 
   useEffect(() => {
-    // fetchMovies();
+    fetchMovies();
   }, []);
 
   return (
@@ -26,18 +26,18 @@ const MoviesList = () => {
         <FlatList
           data={movies}
           renderItem={({item}) => <Text>{item.title}</Text>}
-          keyExtractor={item => item.id.toString()}
+          ListEmptyComponent={<Text>No data</Text>}
           numColumns={2}
+          keyExtractor={item => item.id.toString()}
           columnWrapperStyle={{justifyContent: 'space-between'}}
           showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={0.5}
-          ListEmptyComponent={<Text>No data</Text>}
+          refreshing={isRefreshing}
           onRefresh={async () => {
             setIsRefreshing(true);
             await fetchMovies();
             setIsRefreshing(false);
           }}
-          refreshing={isRefreshing}
+          contentContainerStyle={{padding: 10}}
         />
       )}
     </View>
