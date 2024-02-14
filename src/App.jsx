@@ -1,24 +1,23 @@
 import React from 'react';
-import {Platform, SafeAreaView, StatusBar} from 'react-native';
+import {Button, SafeAreaView, StatusBar} from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
-import CustomFallback from './components/errorFallback';
+import CustomFallback from './components/ErrorFallback';
 import AppNavigator from './navigation/AppNavigator';
-import Header from './components/header';
+import Header from './components/Header';
+import AppBottom from './components/AppBottom';
+import {Screen} from './components/Screen';
 
-const isIos = Platform.OS === 'ios';
-
-function App(): React.JSX.Element {
+function App() {
   console.log(`App`);
 
   return (
-    <AppNavigator>
-      {/* // Fix SafeAreaView to specific platform */}
-      <SafeAreaView className={isIos ? '-mb-20' : 'mb-3'}>
-        <ErrorBoundary FallbackComponent={CustomFallback}>
-          <StatusBar barStyle="light" />
-        </ErrorBoundary>
-      </SafeAreaView>
-    </AppNavigator>
+    <ErrorBoundary FallbackComponent={CustomFallback}>
+      {/* <Screen> */}
+      <AppNavigator>
+        <StatusBar barStyle="light" />
+      </AppNavigator>
+      {/* </Screen> */}
+    </ErrorBoundary>
   );
 }
 
