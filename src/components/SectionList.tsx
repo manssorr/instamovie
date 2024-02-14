@@ -2,6 +2,7 @@ import React, {useEffect, useState, PropsWithChildren} from 'react';
 import {View, FlatList, TouchableOpacity} from 'react-native';
 import AppText from './AppText';
 import Loading from './Loading';
+import SectionHeaderComponent from './SectionHeaderComponent';
 
 interface IProps<T> extends PropsWithChildren<any> {
   data?: T[];
@@ -20,7 +21,7 @@ const SectionList = <T extends unknown>({
   RenderItem,
   isLoading,
   headerTitle,
-  noSeeMore,
+  // noSeeMore,
   OnPressSeeMore,
   ...props
 }: IProps<T>) => {
@@ -30,16 +31,7 @@ const SectionList = <T extends unknown>({
 
   return (
     <View {...props}>
-      <View className="flex-row justify-between align-middle">
-        <AppText className="pb-1 text-lg font-bold">{headerTitle}</AppText>
-        {noSeeMore && (
-          <TouchableOpacity onPress={OnPressSeeMore}>
-            <AppText className="pb-1 text-lg font-bold text-orange-200">
-              See All
-            </AppText>
-          </TouchableOpacity>
-        )}
-      </View>
+      <SectionHeaderComponent title={headerTitle} onSeeMore={OnPressSeeMore} />
       <FlatList
         data={data}
         renderItem={({item}) => <RenderItem item={item} />}

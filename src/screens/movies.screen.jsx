@@ -9,6 +9,7 @@ import {useEffect, useState} from 'react';
 import TendingSection from '../components/TrendingSection';
 import TrendingSection from '../components/TrendingSection';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import SectionHeaderComponent from '../components/SectionHeaderComponent';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -31,21 +32,20 @@ const MoviesScreen = ({navigation}) => {
   return (
     <>
       <Screen>
-        <ScrollView>
-          <SafeAreaView>
-            <TrendingSection data={movies} isLoading={isLoading} />
-          </SafeAreaView>
-          <SafeAreaView>
-            <MoviesList
-              // headerComponent={
-              //   <TrendingSection data={movies} isLoading={isLoading} />
-              // }
-              movies={movies}
-              fetchMovies={fetchMovies}
-              isLoading={isLoading}
-            />
-          </SafeAreaView>
-        </ScrollView>
+        {/* <ScrollView> */}
+        {/* <TrendingSection data={movies} isLoading={isLoading} /> */}
+        <MoviesList
+          headerComponent={
+            <>
+              <TrendingSection data={movies} isLoading={isLoading} />
+
+              {/* Title of all movies section */}
+              <SectionHeaderComponent title="All movies" />
+            </>
+          }
+          movies={movies}
+        />
+        {/* </ScrollView> */}
       </Screen>
     </>
   );

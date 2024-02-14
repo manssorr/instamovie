@@ -7,20 +7,21 @@ import Loading from './Loading';
 
 const MoviesList = ({movies, headerComponent}) => {
   return (
-    <>
-      <AppText className="pb-1 text-lg font-bold">All Movies</AppText>
-      <FlatList
-        data={movies}
-        renderItem={({item}) => <MovieCard movie={item} />}
-        ListEmptyComponent={<AppText>No data</AppText>}
-        numColumns={2}
-        ListHeaderComponent={() => headerComponent}
-        keyExtractor={item => item.id.toString()}
-        columnWrapperStyle={{justifyContent: 'space-between'}}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{gap: 20}}
-      />
-    </>
+    <FlatList
+      data={movies}
+      ListHeaderComponent={() => headerComponent}
+      renderItem={({item}) => <MovieCard movie={item} />}
+      ListEmptyComponent={<AppText>No data</AppText>}
+      numColumns={2}
+      keyExtractor={item => item.id.toString()}
+      columnWrapperStyle={{justifyContent: 'space-between'}}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{gap: 20}}
+      ListHeaderComponentStyle={{
+        // fix all movies header extra down space because of gap and the padding of the MovieCard
+        marginBottom: -20,
+      }}
+    />
   );
 };
 

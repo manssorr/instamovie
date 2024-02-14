@@ -4,6 +4,7 @@ import MovieScreen from '../screens/Movie.screen';
 import {colors, routes} from '../utils/CONSTANTS';
 import Header from '../components/Header';
 import {limitString} from '../utils/helperFunctions';
+import TrendingMoviesScreen from '../screens/TrendingMovies.screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,16 @@ function MoivesStack() {
               {...props}
             />
           ),
+          headerTitleAlign: 'center',
+        })}
+      />
+      <Stack.Screen
+        name={routes.TRENDING}
+        component={TrendingMoviesScreen}
+        options={({navigation, route}) => ({
+          headerBackVisible: false,
+          headerStyle: {backgroundColor: colors.dark},
+          headerTitle: props => <Header title="Trending" {...props} />,
           headerTitleAlign: 'center',
         })}
       />
