@@ -11,6 +11,7 @@ export {BASE_URL, API_KEY};
 
 export const routes = {
   MOVIES: 'Movies',
+  TRENDING: 'Trending',
   MOVIE: 'Movie',
 };
 

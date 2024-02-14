@@ -3,12 +3,18 @@ import AppText from './AppText';
 import {TouchableWithoutFeedback, Image, View} from 'react-native';
 import MovieCard from './MovieCard';
 import Loading from './Loading';
-import {Device} from '../utils/CONSTANTS';
+import {Device, routes} from '../utils/CONSTANTS';
+import SectionHeaderComponent from './SectionHeaderComponent';
+import {useNavigation} from '@react-navigation/native';
 
 const TrendingSection = ({data}) => {
+  const navigation = useNavigation();
   return (
     <View className="mb-8">
-      <AppText className="pb-1 text-lg font-bold">Trending</AppText>
+      <SectionHeaderComponent
+        title="Trending"
+        onSeeMore={() => navigation.navigate(routes.TRENDING)}
+      />
 
       <Carousel
         data={data}
