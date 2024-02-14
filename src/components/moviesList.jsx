@@ -1,46 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList} from 'react-native';
-import getMovies from '../utils/getMovies';
+import {useEffect, useState} from 'react';
+import {View, FlatList} from 'react-native';
+import {data} from '../utils/CONSTANTS';
+import MovieCard from './MovieCard';
+import AppText from './AppText';
+import Loading from './Loading';
 
-const MoviesList = () => {
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const fetchMovies = async () => {
-    setIsLoading(true);
-    const result = await getMovies();
-
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    fetchMovies();
-  }, []);
-
+const MoviesList = ({movies, headerComponent}) => {
   return (
-    <View className="bg-fuchsia-500 ">
-      {isLoading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <FlatList
-          data={movies}
-          renderItem={({item}) => <Text>{item.title}</Text>}
-          ListEmptyComponent={<Text>No data</Text>}
-          numColumns={2}
-          keyExtractor={item => item.id.toString()}
-          columnWrapperStyle={{justifyContent: 'space-between'}}
-          showsVerticalScrollIndicator={false}
-          refreshing={isRefreshing}
-          onRefresh={async () => {
-            setIsRefreshing(true);
-            await fetchMovies();
-            setIsRefreshing(false);
-          }}
-          contentContainerStyle={{padding: 10}}
-        />
-      )}
-    </View>
+    <>
+      <AppText className="pb-1 text-lg font-bold">All Movies</AppText>
+      <FlatList
+        data={movies}
+        renderItem={({item}) => <MovieCard movie={item} />}
+        ListEmptyComponent={<AppText>No data</AppText>}
+        numColumns={2}
+        ListHeaderComponent={() => headerComponent}
+        keyExtractor={item => item.id.toString()}
+        columnWrapperStyle={{justifyContent: 'space-between'}}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{gap: 20}}
+      />
+    </>
   );
 };
 
