@@ -1,0 +1,13 @@
+TODOs
+✔ Add loading screen @done(24-02-13 05:08)
+✔ make the header @done(24-02-13 15:17)
+✔ get all api @done(24-02-13 15:17)
+✔ get movie api @done(24-02-13 15:17)
+✔ company components @done(24-02-13 15:17)
+☐ add chaching
+☐ add no movies screen
+✔ fix error boundrey @done(24-02-13 15:17)
+☐ add no internet indicator
+
+☐ mock the fetch android
+☐ mock the fetch ios
