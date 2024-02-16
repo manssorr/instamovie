@@ -1,7 +1,8 @@
-import {Platform, ViewStyle, StyleSheet} from 'react-native';
+import {Platform, ViewStyle, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Device, spaces} from '../utils/CONSTANTS';
+import OfflineNotice from './OfflineNotice';
 
 const edgesTabView = ['right', 'top', 'left'];
 const fixTopTabView = ['right', 'left', 'bottom'];
@@ -27,13 +28,18 @@ export function Screen({
   const styles = styleSheet({...props, withPadding});
 
   return (
-    <SafeAreaView
-      className={`container flex-1  bg-neutral-900`}
-      style={[styles.container, style]}
-      edges={inTabView ? edgesTabView : fixTop ? fixTopTabView : undefined}
-      {...props}>
-      {children}
-    </SafeAreaView>
+    <>
+      <View>
+        <OfflineNotice show />
+      </View>
+      <SafeAreaView
+        className={`container flex-1  bg-neutral-900`}
+        style={[styles.container, style]}
+        edges={inTabView ? edgesTabView : fixTop ? fixTopTabView : undefined}
+        {...props}>
+        {children}
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -43,5 +49,6 @@ const styleSheet = (props: IProps | {withPadding: boolean}) =>
     container: {
       flex: 1,
       padding: props.withPadding ? spaces.screenPadding : 0,
+      paddingTop: 0,
     },
   });

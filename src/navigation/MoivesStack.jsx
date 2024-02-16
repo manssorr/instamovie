@@ -42,7 +42,9 @@ function MoivesStack() {
         options={({navigation, route}) => ({
           headerBackVisible: false,
           headerStyle: {backgroundColor: colors.dark},
-          headerTitle: props => <Header title="Trending" {...props} />,
+          headerTitle: props => (
+            <Header title="Trending this week" {...props} />
+          ),
           headerTitleAlign: 'center',
         })}
       />

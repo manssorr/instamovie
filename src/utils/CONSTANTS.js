@@ -1,9 +1,9 @@
-// this should be env file.
-
 import {Dimensions} from 'react-native';
+import {IMovie} from './types';
 
+// this should be env file.
 const BASE_URL = 'https://api.themoviedb.org/3/';
-const API_KEY = 'b4cdf243de74de7898c5475998831984';
+const API_KEY = '?api_key=b4cdf243de74de7898c5475998831984';
 
 export {BASE_URL, API_KEY};
 
@@ -802,3 +802,17 @@ export const getImage500px = path => `https://image.tmdb.org/t/p/w500/${path}`;
 export const getImage342px = path => `https://image.tmdb.org/t/p/w500/${path}`;
 export const getImage185px = path => `https://image.tmdb.org/t/p/w500/${path}`;
 export const noImage = require('../assets/no-image.webp');
+
+//  utils
+export const getImage = (movie): IMovie => {
+  if (movie?.poster_path) {
+    // console.log(`we have poster`, movie.title);
+    return {uri: `${getImage500px(movie.poster_path)}`};
+  } else if (movie?.backdrop_path) {
+    // console.log(`we have backdrop`, movie.title);
+    return {uri: `${getImage500px(movie.backdrop_path)}`};
+  } else {
+    // console.log(`we have no image`, movie.title);
+    return noImage;
+  }
+};

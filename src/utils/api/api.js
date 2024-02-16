@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 import {API_KEY, BASE_URL} from '../CONSTANTS';
-import GetRequestModule, {nativeGet} from '../NativeModules/NetworkingModule';
+import nativeGet, {IResponse} from '../NativeModules/NetworkingModule';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -51,12 +51,17 @@ const apiCall = async (endpoint, params): IResponse => {
   }
 };
 
-export const getAllMovies = () => apiCall('discover/movie');
+export const getAllMovies: IResponse = () => apiCall('discover/movie');
 
-export const getAllMoviesByPage = page =>
-  apiCall(`discover/movie?page=${page}`);
+export const getTopRatedMovies: IResponse = () => apiCall('movie/top_rated');
 
-export const getMovie = movie_id => apiCall(`movie/${movie_id}`);
+export const getTrendingMovies: IResponse = (period: 'day' | 'week' = 'week') =>
+  apiCall(`trending/movie/${period}`);
 
 export const getSimilarMovies = movie_id =>
   apiCall(`movie/${movie_id}/similar`);
+
+export const getMovie = movie_id => apiCall(`movie/${movie_id}`);
+
+export const getAllMoviesByPage = page =>
+  apiCall(`discover/movie?page=${page}`);

@@ -4,7 +4,11 @@ import Header from '../components/Header';
 import {data2, routes} from '../utils/CONSTANTS';
 import AppBottom from '../components/AppBottom';
 import {Screen} from '../components/Screen';
-import {getAllMovies, getAllMoviesByPage} from '../utils/api/api';
+import {
+  getAllMovies,
+  getAllMoviesByPage,
+  getTrendingMovies,
+} from '../utils/api/api';
 import {useEffect, useState} from 'react';
 import TendingSection from '../components/TrendingSection';
 import TrendingSection from '../components/TrendingSection';
@@ -14,14 +18,13 @@ import SectionHeaderComponent from '../components/SectionHeaderComponent';
 const isIOS = Platform.OS === 'ios';
 
 const TrendingMoviesScreen = ({navigation}) => {
-  const [movies, setMovies] = useState([]);
-  const [similarMovies, setSimilarMovies] = useState([]);
+  const [trendingMovies, setTrendingMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchMovies = async () => {
     setIsLoading(true);
-    const allMoviesRes = await getAllMovies();
-    setMovies(allMoviesRes.results);
+    const allTrendingMovies = await getTrendingMovies();
+    setTrendingMovies(allTrendingMovies.data.results);
     setIsLoading(false);
   };
 
@@ -32,10 +35,7 @@ const TrendingMoviesScreen = ({navigation}) => {
   return (
     <>
       <Screen>
-        {/* <ScrollView> */}
-        {/* <TrendingSection data={movies} isLoading={isLoading} /> */}
-        <MoviesList movies={movies} />
-        {/* </ScrollView> */}
+        <MoviesList movies={trendingMovies} />
       </Screen>
     </>
   );

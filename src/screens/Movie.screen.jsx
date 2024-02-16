@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import {
   Device,
   colors,
-  fakeImage,
+  getImage,
   getImage500px,
   noImage,
   routes,
@@ -21,12 +21,11 @@ import {getMovie, getSimilarMovies} from '../utils/api/api';
 import AppText from '../components/AppText';
 import {Screen} from '../components/Screen';
 import SectionList from '../components/SectionList';
-import {limitString} from '../utils/helperFunctions';
 import MovieCard from '../components/MovieCard';
 
 const Genre = ({genre}: {genre: IGenre}) => {
   return (
-    <View className="px-[5px] py-[2px] mx-1 font-semibold rounded-lg bg-orange-200">
+    <View className="px-[5px] py-[2px] m-1 font-semibold rounded-lg bg-orange-200">
       <AppText className="font-semibold text-neutral-700 ">
         {genre.name}
       </AppText>
@@ -34,21 +33,21 @@ const Genre = ({genre}: {genre: IGenre}) => {
   );
 };
 
-const MovieScreen: React.FC = ({navigation}) => {
+const MovieScreen = ({navigation}) => {
   const {
     params: {movieId},
-  } = useRoute<RouteProp<ParamList, 'Movie'>>();
+  } = useRoute();
 
   const [similarMovies, setSimilarMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [movieInfo, setMovieInfo] = useState<IFullMovie>();
+  const [movieInfo, setMovieInfo] = useState();
 
   const fetchMovie = async () => {
     setIsLoading(true);
     const movieRes = await getMovie(movieId);
     const similarRes = await getSimilarMovies(movieId);
-    setMovieInfo(movieRes);
-    setSimilarMovies(similarRes.results);
+    setMovieInfo(movieRes.data);
+    setSimilarMovies(similarRes.data.results);
     setIsLoading(false);
   };
 
@@ -71,6 +70,8 @@ const MovieScreen: React.FC = ({navigation}) => {
     ? new Date(movieInfo.release_date).getFullYear()
     : 'N/A';
 
+  const image = getImage(movieInfo);
+
   return (
     <Screen noPadding>
       {/* Screen Body */}
@@ -82,13 +83,11 @@ const MovieScreen: React.FC = ({navigation}) => {
           <View className="">
             {/* Back image */}
             <Image
-              source={
-                movieInfo?.backdrop_path
-                  ? {uri: getImage500px(movieInfo?.backdrop_path)}
-                  : noImage
-              }
-              width={Device.SCREEN_WIDTH}
-              height={Device.SCREEN_HEIGHT / 2}
+              source={image}
+              style={{
+                height: Device.SCREEN_HEIGHT / 2,
+                width: Device.SCREEN_WIDTH,
+              }}
             />
 
             {/* Upper Mask layer */}
@@ -119,8 +118,8 @@ const MovieScreen: React.FC = ({navigation}) => {
               {movieInfo?.status} • {year} • {stars}
             </Text>
             {/* Genres */}
-            <View className="flex-row justify-center gap-2 mt-2">
-              {movieInfo?.genres.map((genre, index) => (
+            <View className="flex-row flex-wrap justify-center gap-1 mt-2">
+              {movieInfo?.genres?.map((genre, index) => (
                 <Genre key={index} genre={genre} />
               ))}
             </View>
@@ -138,7 +137,7 @@ const MovieScreen: React.FC = ({navigation}) => {
             {/* Cast */}
 
             {/* production_companies */}
-            <SectionList<ICompany>
+            <SectionList
               headerTitle="Production Companies"
               data={movieInfo?.production_companies}
               RenderItem={({item}) => <CompanyItem company={item} />}
@@ -148,7 +147,7 @@ const MovieScreen: React.FC = ({navigation}) => {
             />
 
             {/* Similar Movies */}
-            <SectionList<IFullMovie>
+            <SectionList
               headerTitle="Similar Movies"
               data={similarMovies}
               RenderItem={({item}) => (

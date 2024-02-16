@@ -33,7 +33,7 @@ interface IGetRequestModule {
 }
 
 // getRequest
-export const nativeGet = async (url: string): Promise<IResponse> => {
+const nativeGet = async (url: string): Promise<IResponse> => {
   try {
     const response = await GetRequestModule.performGetRequest(url);
     const json: IResponse = JSON.parse(response);
@@ -48,7 +48,7 @@ export const nativeGet = async (url: string): Promise<IResponse> => {
     }
   } catch (e) {
     const error: IErrorResponse = e;
-    console.log('nativeGet Err: ', error);
+    console.log('nativeGet Err: ', error.message);
     return {
       status_code: error?.userInfo?.status_code,
       status_message: error.message,

@@ -3,6 +3,7 @@ import {
   BASE_URL,
   Device,
   fakeImage,
+  getImage,
   getImage500px,
   noImage,
   routes,
@@ -54,19 +55,16 @@ const MovieCard = ({
       2;
 
   const card_height = cardHeight ? cardHeight : Device.SCREEN_HEIGHT / 4;
+
+  const image = getImage(movie);
+
   return (
     <View style={{width: card_width}}>
       <TouchableWithoutFeedback onPress={onPress ? onPress : navigateMovie}>
         <View className="flex-col">
           {/* <Image source={{uri: `${BASE_URL}${movie.poster_path}`}} /> */}
           <Image
-            source={
-              movie.poster_path
-                ? {uri: getImage500px(movie.poster_path)}
-                : movie.backdrop_path
-                ? {uri: getImage500px(movie.backdrop_path)}
-                : noImage
-            }
+            source={image}
             className="rounded-2xl"
             resizeMode="cover"
             style={{height: card_height, width: card_width}}

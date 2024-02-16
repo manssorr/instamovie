@@ -8,8 +8,6 @@ import CustomFallback from '../components/ErrorFallback';
 const isIos = Platform.OS === 'ios';
 
 function AppNavigator() {
-  console.log(`AppNavigator`);
-
   return (
     <NavigationContainer>
       <MoivesStack />
