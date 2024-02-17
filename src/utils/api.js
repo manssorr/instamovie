@@ -69,7 +69,12 @@ export const getTrendingMovies: IResponse = async (
   const response = await apiCall(`trending/movie/${period}`);
 
   if (response.success) {
-    const cached = cacheMoviesList('trending', response.data.results, '', 1);
+    const cached = cacheMoviesList(
+      'trending',
+      response.data.results,
+      '',
+      'week', // cache for 1 week
+    );
   }
   return response;
 };

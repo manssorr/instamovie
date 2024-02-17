@@ -161,21 +161,21 @@ const MoviesScreen = ({navigation}) => {
   return (
     <>
       <Screen>
-        {/* <ScrollView> */}
-        <TrendingSection
-          data={trendingMovies}
-          isLoading={trendingLoading}
-          isError={trendingError}
-          errorMessage={trendingErrorMessage}
-        />
+        <ScrollView>
+          <TrendingSection
+            data={trendingMovies}
+            isLoading={trendingLoading}
+            isError={trendingError}
+            errorMessage={trendingErrorMessage}
+          />
 
-        <MoviesList
-          movies={popularMovies}
-          isLoading={popularLoading}
-          isError={popularError}
-          errorMessage={popularErrorMessage}
-        />
-        {/* </ScrollView> */}
+          <MoviesList
+            movies={popularMovies}
+            isLoading={popularLoading}
+            isError={popularError}
+            errorMessage={popularErrorMessage}
+          />
+        </ScrollView>
       </Screen>
     </>
   );

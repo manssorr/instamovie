@@ -13,7 +13,7 @@ const TrendingSection = ({data, isLoading, isError, errorMessage}) => {
   return (
     <View className="flex-1 mb-2">
       <SectionHeaderComponent
-        title="Trending"
+        title="Trending this week"
         onSeeMore={() => navigation.navigate(routes.TRENDING)}
       />
 

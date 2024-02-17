@@ -5,7 +5,7 @@ import AppBottom from './AppBottom';
 
 const CustomFallback = (props: {error: Error, resetError: Function}) => {
   return (
-    <Screen className="flex-1 p-3 ">
+    <Screen className="flex-1 p-3 mt-[56px]">
       {/* Error */}
       <AppText className="pb-10 text-3xl">Something happened!</AppText>
 
