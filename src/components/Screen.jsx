@@ -1,7 +1,7 @@
 import {Platform, ViewStyle, StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Device, spaces} from '../utils/CONSTANTS';
+import {spaces} from '../utils/CONSTANTS';
 import OfflineNotice from './OfflineNotice';
 
 const edgesTabView = ['right', 'top', 'left'];
@@ -27,13 +27,17 @@ export function Screen({
   const withPadding = !noPadding;
   const styles = styleSheet({...props, withPadding});
 
+  useEffect(() => {
+    console.log('Screen rendered');
+  }, []);
+
   return (
     <>
       <View>
-        <OfflineNotice show />
+        <OfflineNotice />
       </View>
       <SafeAreaView
-        className={`container flex-1  bg-neutral-900`}
+        className="container flex-1 bg-neutral-900"
         style={[styles.container, style]}
         edges={inTabView ? edgesTabView : fixTop ? fixTopTabView : undefined}
         {...props}>

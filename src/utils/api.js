@@ -1,10 +1,12 @@
 import {Platform} from 'react-native';
-import {API_KEY, BASE_URL} from '../CONSTANTS';
-import nativeGet, {IResponse} from '../NativeModules/NetworkingModule';
+import {API_KEY, BASE_URL} from './CONSTANTS';
+import nativeGet, {IResponse} from './NativeModules/NetworkingModule';
+import {cacheMovie, cacheMoviesList} from './caching/cache';
 
 const isAndroid = Platform.OS === 'android';
 
 const apiCall = async (endpoint, params): IResponse => {
+  console.log(`apiCall called at: `, endpoint);
   const options = {
     method: 'GET',
     params: {
@@ -40,7 +42,6 @@ const apiCall = async (endpoint, params): IResponse => {
         };
       }
     } catch (error) {
-      console.log(`error`, error);
       return {
         success: false,
         status_code: 0,
@@ -51,17 +52,46 @@ const apiCall = async (endpoint, params): IResponse => {
   }
 };
 
-export const getAllMovies: IResponse = () => apiCall('discover/movie');
+export const getPopularMovies: IResponse = async () => {
+  const response = await apiCall('movie/popular');
+
+  if (response.success) {
+    const cached = cacheMoviesList('popular', response.data.results, '', 1);
+  }
+  return response;
+};
 
 export const getTopRatedMovies: IResponse = () => apiCall('movie/top_rated');
 
-export const getTrendingMovies: IResponse = (period: 'day' | 'week' = 'week') =>
-  apiCall(`trending/movie/${period}`);
+export const getTrendingMovies: IResponse = async (
+  period: 'day' | 'week' = 'week',
+) => {
+  const response = await apiCall(`trending/movie/${period}`);
 
-export const getSimilarMovies = movie_id =>
-  apiCall(`movie/${movie_id}/similar`);
+  if (response.success) {
+    const cached = cacheMoviesList('trending', response.data.results, '', 1);
+  }
+  return response;
+};
 
-export const getMovie = movie_id => apiCall(`movie/${movie_id}`);
+export const getSimilarMovies = async movie_id => {
+  const response = await apiCall(`movie/${movie_id}/similar`);
+
+  if (response.success) {
+    const cached = cacheMoviesList('similar', response.data.results, movie_id);
+  }
+  return response;
+};
+
+export const getMovie = async movie_id => {
+  const response = await apiCall(`movie/${movie_id}`);
+
+  if (response.success) {
+    const cached = cacheMovie(movie_id, response.data, 'week');
+  }
+
+  return response;
+};
 
 export const getAllMoviesByPage = page =>
   apiCall(`discover/movie?page=${page}`);

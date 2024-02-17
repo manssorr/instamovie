@@ -9,6 +9,12 @@ export {BASE_URL, API_KEY};
 
 // Navigation Screens
 
+export const errors = {
+  GENERIC: 'Something went wrong',
+  EMPTY: 'No data found',
+  NO_CONNECTION: "Can't load resources, please check your internet connection",
+};
+
 export const routes = {
   MOVIES: 'Movies',
   TRENDING: 'Trending',
@@ -733,7 +739,7 @@ export const data2 = {
   total_results: 848763,
 };
 
-const filmData = {
+export const filmData = {
   adult: false,
   backdrop_path: '/pWsD91G2R1Da3AKM3ymr3UoIfRb.jpg',
   belongs_to_collection: {

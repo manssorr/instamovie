@@ -1,41 +1,63 @@
-import {Button, Platform, View, ScrollView} from 'react-native';
 import MoviesList from '../components/MoviesList';
-import Header from '../components/Header';
-import {data2, routes} from '../utils/CONSTANTS';
-import AppBottom from '../components/AppBottom';
 import {Screen} from '../components/Screen';
-import {
-  getAllMovies,
-  getAllMoviesByPage,
-  getTrendingMovies,
-} from '../utils/api/api';
+import {getTrendingMovies} from '../utils/api';
 import {useEffect, useState} from 'react';
-import TendingSection from '../components/TrendingSection';
-import TrendingSection from '../components/TrendingSection';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import SectionHeaderComponent from '../components/SectionHeaderComponent';
-
-const isIOS = Platform.OS === 'ios';
+import {getCachedMoviesList} from '../utils/caching/cache';
+import useOffline from '../utils/hooks/useOffline';
 
 const TrendingMoviesScreen = ({navigation}) => {
-  const [trendingMovies, setTrendingMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const connected = useOffline();
 
-  const fetchMovies = async () => {
+  const [trendingMovies, setTrendingMovies] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const fetchTrendingMovies = async () => {
+    let trendingMoviesResult = [];
     setIsLoading(true);
-    const allTrendingMovies = await getTrendingMovies();
-    setTrendingMovies(allTrendingMovies.data.results);
+
+    // check cache
+    let cachedTrendingMovies = getCachedMoviesList('trending');
+
+    if (cachedTrendingMovies) {
+      setTrendingMovies(cachedTrendingMovies);
+    } else {
+      if (!connected) {
+        setIsLoading(false);
+        setIsError(true);
+        setErrorMessage('No internet connection');
+
+        return;
+      }
+
+      trendingMoviesResult = await getTrendingMovies();
+
+      if (!trendingMoviesResult.success) {
+        setIsLoading(false);
+        setIsError(true);
+        setErrorMessage(trendingMoviesResult?.status_message);
+      }
+      setTrendingMovies(trendingMoviesResult.data.results);
+    }
+
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchMovies();
+    fetchTrendingMovies();
   }, []);
 
   return (
     <>
       <Screen>
-        <MoviesList movies={trendingMovies} />
+        <MoviesList
+          movies={trendingMovies}
+          isLoading={isLoading}
+          isError={isError}
+          errorMessage={errorMessage}
+        />
       </Screen>
     </>
   );

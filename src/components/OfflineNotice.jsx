@@ -1,16 +1,11 @@
-import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {Device} from '../utils/CONSTANTS';
 import AppText from './AppText';
+import useOffline from '../utils/hooks/useOffline';
 
 const OfflineNotice = ({}) => {
-  const netInfo = useNetInfo();
-
-  const noConnection =
-    netInfo.type !== 'unknown' && netInfo.isInternetReachable === false;
-
-  const connected = !noConnection;
+  const connected = useOffline();
 
   if (connected) return null;
   return (

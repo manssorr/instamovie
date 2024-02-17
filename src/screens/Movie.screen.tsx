@@ -1,9 +1,11 @@
+//@ts-nocheck
 import {View, Text, Image, ScrollView} from 'react-native';
 import {useRoute, type RouteProp} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import {
   Device,
   colors,
+  errors,
   getImage,
   getImage500px,
   noImage,
@@ -17,11 +19,14 @@ import {
 } from '../utils/types';
 import LinearGradient from 'react-native-linear-gradient';
 import Loading from '../components/Loading';
-import {getMovie, getSimilarMovies} from '../utils/api/api';
+import {getMovie, getSimilarMovies} from '../utils/api';
 import AppText from '../components/AppText';
 import {Screen} from '../components/Screen';
 import SectionList from '../components/SectionList';
 import MovieCard from '../components/MovieCard';
+import useOffline from '../utils/hooks/useOffline';
+import {getCachedMovie, getCachedMoviesList} from '../utils/caching/cache';
+import Error from '../components/Error';
 
 const Genre = ({genre}: {genre: IGenre}) => {
   return (
@@ -36,46 +41,158 @@ const Genre = ({genre}: {genre: IGenre}) => {
 const MovieScreen = ({navigation}) => {
   const {
     params: {movieId},
-  } = useRoute();
+  } = useRoute<RouteProp<ParamList, 'Movie'>>();
+  const connected = useOffline();
+
+  const [movie, setMovie] = useState<IFullMovie>();
+  const [movieLoading, setMovieLoading] = useState(true);
+  const [movieError, setMovieError] = useState(false);
+  const [movieErrorMessage, setMovieErrorMessage] = useState('');
 
   const [similarMovies, setSimilarMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [movieInfo, setMovieInfo] = useState();
+  const [similarLoading, setSimilarLoading] = useState(true);
+  const [similarError, setSimilarError] = useState(false);
+  const [similarErrorMessage, setSimilarErrorMessage] = useState('');
 
-  const fetchMovie = async () => {
-    setIsLoading(true);
-    const movieRes = await getMovie(movieId);
-    const similarRes = await getSimilarMovies(movieId);
-    setMovieInfo(movieRes.data);
-    setSimilarMovies(similarRes.data.results);
-    setIsLoading(false);
+  const resetMovie = () => {
+    setMovieError(false);
+    setMovieErrorMessage('');
+    setMovieLoading(false);
   };
 
+  const resetSimilar = () => {
+    setSimilarError(false);
+    setSimilarErrorMessage('');
+    setSimilarLoading(false);
+  };
+
+  const fetchMovie = async () => {
+    setMovieLoading(true);
+
+    // check cache
+    let cachedMovie = getCachedMovie(movieId);
+
+    if (cachedMovie) {
+      setMovie(cachedMovie);
+      resetMovie();
+      return;
+    } else {
+      if (!connected) {
+        console.log(`!connected`, !connected);
+        setMovie({});
+        setMovieError(true);
+        setMovieErrorMessage(errors.NO_CONNECTION);
+        setMovieLoading(false);
+        return;
+      } else {
+        let movieResult = await getMovie(movieId);
+
+        if (!movieResult.success) {
+          setMovie({});
+          setMovieError(true);
+          setMovieErrorMessage(
+            movieResult?.status_message || 'Something went wrong',
+          );
+          setMovieLoading(false);
+          return;
+        }
+
+        setMovie(movieResult.data);
+        resetMovie();
+      }
+    }
+  };
+
+  const fetchSimilarMovies = async () => {
+    setSimilarLoading(true);
+
+    // check cache
+    let cachedSimilarMovies = getCachedMoviesList('similar', movieId);
+
+    if (cachedSimilarMovies) {
+      setSimilarMovies(cachedSimilarMovies);
+      resetSimilar();
+      return;
+    } else {
+      if (!connected) {
+        setSimilarMovies([]);
+        setSimilarError(true);
+        setSimilarErrorMessage('No internet connection');
+        setSimilarLoading(false);
+        return;
+      } else {
+        let similarMoviesResult = await getSimilarMovies(movieId);
+
+        if (!similarMoviesResult.success) {
+          setSimilarMovies([]);
+          setSimilarError(true);
+          setSimilarErrorMessage(
+            similarMoviesResult?.status_message || 'Something went wrong',
+          );
+          setSimilarLoading(false);
+          return;
+        }
+        setSimilarMovies(similarMoviesResult.data.results);
+        resetSimilar();
+      }
+    }
+  };
+
+  // check if empty on movie change
   useEffect(() => {
-    // get movie info
-    fetchMovie();
-  }, [movieId]);
+    // check if popular movies are empty
+    const isMovieEmpty = movie?.title === '';
+    if (isMovieEmpty) {
+      setMovieError(true);
+      setMovieErrorMessage('No movie found');
+      setMovieLoading(false);
+    }
+
+    // check if similar movies are empty
+    const isSimilarEmpty = similarMovies?.length === 0;
+    if (isSimilarEmpty) {
+      setSimilarError(true);
+      setSimilarErrorMessage('No movies found');
+      setSimilarLoading(false);
+    }
+  }, [movie, similarMovies]);
+
+  const reFetch = async () => {
+    await fetchMovie();
+    await fetchSimilarMovies();
+  };
+  // on first render
+  useEffect(() => {
+    console.log('rendered movie screen');
+
+    reFetch();
+  }, []);
+
+  // network change or value change
+  useEffect(() => {
+    reFetch();
+  }, [connected, movieId]);
 
   // get the vote out of five, new_rate = (old_rate/10) * 5
-  const starsCount: number = movieInfo
+  const starsCount: number = movie
     ? // put + to corelate to number
-      +((movieInfo.vote_average / 10) * 5).toFixed(0)
+      +((movie.vote_average / 10) * 5).toFixed(0)
     : 0;
 
   // create string of starts by using Array.from method
   const stars = Array.from({length: starsCount}, _ => '⭐️').join('');
 
   // get release year
-  const year = movieInfo
-    ? new Date(movieInfo.release_date).getFullYear()
-    : 'N/A';
+  const year = movie ? new Date(movie.release_date).getFullYear() : 'N/A';
 
-  const image = getImage(movieInfo);
+  const image = getImage(movie);
 
   return (
     <Screen noPadding>
       {/* Screen Body */}
-      {isLoading ? (
+      {movieError ? (
+        <Error customText={connected + movieErrorMessage} />
+      ) : movieLoading ? (
         <Loading title="Loading..." />
       ) : (
         <ScrollView>
@@ -107,19 +224,19 @@ const MovieScreen = ({navigation}) => {
           <View className="-mt-10 border-solid h-50">
             {/* Title */}
             <Text className="text-3xl font-bold tracking-wider text-center text-white ">
-              {movieInfo?.title}
+              {movie?.title}
             </Text>
             <Text className="text-sm tracking-wider text-center text-orange-200 ">
-              {movieInfo?.tagline}
+              {movie?.tagline}
             </Text>
 
             {/* Info */}
             <Text className="justify-center mt-5 text-base font-semibold tracking-wider text-center align-middle text-neutral-400">
-              {movieInfo?.status} • {year} • {stars}
+              {movie?.status} • {year} • {stars}
             </Text>
             {/* Genres */}
             <View className="flex-row flex-wrap justify-center gap-1 mt-2">
-              {movieInfo?.genres?.map((genre, index) => (
+              {movie?.genres?.map((genre, index) => (
                 <Genre key={index} genre={genre} />
               ))}
             </View>
@@ -128,18 +245,16 @@ const MovieScreen = ({navigation}) => {
           {/* Rest of body */}
           <View className="p-2">
             {/* Description */}
-            {/* <View className="mt-5">
+            <View className="mt-5">
               <AppText className="text-base font-semibold tracking-wider text-neutral-400 text-start ">
-                {movieInfo?.overview}
+                {movie?.overview}
               </AppText>
-            </View> */}
-
-            {/* Cast */}
+            </View>
 
             {/* production_companies */}
-            <SectionList
+            <SectionList<ICompany>
               headerTitle="Production Companies"
-              data={movieInfo?.production_companies}
+              data={movie?.production_companies}
               RenderItem={({item}) => <CompanyItem company={item} />}
               isLoading={false}
               noSeeMore
@@ -147,8 +262,11 @@ const MovieScreen = ({navigation}) => {
             />
 
             {/* Similar Movies */}
-            <SectionList
+            <SectionList<IFullMovie>
               headerTitle="Similar Movies"
+              isLoading={similarLoading}
+              isError={similarError}
+              errorMessage={similarErrorMessage}
               data={similarMovies}
               RenderItem={({item}) => (
                 <MovieCard
@@ -165,7 +283,6 @@ const MovieScreen = ({navigation}) => {
                 />
               )}
               fetchData={() => getSimilarMovies(movieId)}
-              isLoading={false}
               noSeeMore
               className="mt-5"
             />

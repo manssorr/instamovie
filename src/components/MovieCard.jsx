@@ -1,14 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {
-  BASE_URL,
-  Device,
-  fakeImage,
-  getImage,
-  getImage500px,
-  noImage,
-  routes,
-  spaces,
-} from '../utils/CONSTANTS';
+import {Device, getImage, routes, spaces} from '../utils/CONSTANTS';
 import {limitString} from '../utils/helperFunctions';
 import {IMovie} from '../utils/types';
 import {View, Text, Image, TouchableWithoutFeedback} from 'react-native';
