@@ -61,7 +61,7 @@ const MovieCard = ({
             style={{height: card_height, width: card_width}}
           />
           {noTitle ? null : (
-            <Text className="font-semibold text-white">
+            <Text className="mt-1 font-semibold text-white">
               {limitString(movie.title, 20)}
             </Text>
           )}
