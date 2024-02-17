@@ -3,7 +3,7 @@ import AppText from './AppText';
 import {SafeAreaView, Image, View} from 'react-native';
 import MovieCard from './MovieCard';
 import Loading from './Loading';
-import {Device, routes} from '../utils/CONSTANTS';
+import {Device, errors, routes} from '../utils/CONSTANTS';
 import SectionHeaderComponent from './SectionHeaderComponent';
 import {useNavigation} from '@react-navigation/native';
 import Error from './Error';
@@ -35,6 +35,7 @@ const TrendingSection = ({data, isLoading, isError, errorMessage}) => {
               />
             )}
             firstItem={1}
+            ListEmptyComponent={<Error customText={errors.EMPTY} />}
             inactiveSlideOpacity={0.6}
             sliderWidth={Device.SCREEN_WIDTH}
             itemWidth={Device.SCREEN_WIDTH * 0.66}

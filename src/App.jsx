@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {Alert, StatusBar} from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
 import CustomFallback from './components/ErrorFallback';
 import AppNavigator from './navigation/AppNavigator';

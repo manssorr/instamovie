@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, FlatList, FlatListProps} from 'react-native';
-import {data} from '../utils/CONSTANTS';
+import {data, errors} from '../utils/CONSTANTS';
 import {type IMovie} from '../utils/types';
 import MovieCard from './MovieCard';
 import AppText from './AppText';
@@ -24,9 +24,8 @@ const MoviesList = ({movies, isLoading, isError, errorMessage}): IProps => {
       ) : (
         <FlatList
           data={movies}
-          // ListHeaderComponent={() => headerComponent}
           renderItem={({item}) => <MovieCard movie={item} />}
-          ListEmptyComponent={<AppText>No data</AppText>}
+          ListEmptyComponent={<Error customText={errors.EMPTY} />}
           numColumns={2}
           keyExtractor={item => item.id.toString()}
           columnWrapperStyle={{justifyContent: 'space-between'}}

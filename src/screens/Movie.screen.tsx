@@ -1,5 +1,5 @@
 //@ts-nocheck
-import {View, Text, Image, ScrollView} from 'react-native';
+import {View, Text, Image, ScrollView, Alert} from 'react-native';
 import {useRoute, type RouteProp} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import {
@@ -27,6 +27,7 @@ import MovieCard from '../components/MovieCard';
 import useOffline from '../utils/hooks/useOffline';
 import {getCachedMovie, getCachedMoviesList} from '../utils/caching/cache';
 import Error from '../components/Error';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const Genre = ({genre}: {genre: IGenre}) => {
   return (
@@ -42,7 +43,9 @@ const MovieScreen = ({navigation}) => {
   const {
     params: {movieId},
   } = useRoute<RouteProp<ParamList, 'Movie'>>();
-  const connected = useOffline();
+  const netInfo = useNetInfo();
+  const connected = netInfo.isConnected;
+  const disconnected = !connected;
 
   const [movie, setMovie] = useState<IFullMovie>();
   const [movieLoading, setMovieLoading] = useState(true);
@@ -54,124 +57,134 @@ const MovieScreen = ({navigation}) => {
   const [similarError, setSimilarError] = useState(false);
   const [similarErrorMessage, setSimilarErrorMessage] = useState('');
 
-  const resetMovie = () => {
-    setMovieError(false);
-    setMovieErrorMessage('');
-    setMovieLoading(false);
-  };
+  // on first render
+  useEffect(() => {
+    fetchMovie();
+    fetchSimilarMovies();
+  }, []);
 
-  const resetSimilar = () => {
-    setSimilarError(false);
-    setSimilarErrorMessage('');
-    setSimilarLoading(false);
-  };
+  // network change or value change
+  useEffect(() => {
+    fetchMovie();
+    fetchSimilarMovies();
+  }, [connected, movieId]);
 
   const fetchMovie = async () => {
     setMovieLoading(true);
+    setMovieError(false);
+    setMovieErrorMessage('');
 
     // check cache
     let cachedMovie = getCachedMovie(movieId);
 
     if (cachedMovie) {
       setMovie(cachedMovie);
-      resetMovie();
-      return;
+      // got cached data continue to reset
     } else {
-      if (!connected) {
-        console.log(`!connected`, !connected);
+      // check internet
+      if (disconnected) {
+        // no cache and no internet
+        // set connection error
+
         setMovie({});
         setMovieError(true);
         setMovieErrorMessage(errors.NO_CONNECTION);
         setMovieLoading(false);
-        return;
-      } else {
-        let movieResult = await getMovie(movieId);
 
-        if (!movieResult.success) {
+        // stop here
+        return;
+      } else if (connected) {
+        // continue to fetch new data
+        let movieResult = await getMovie(movieId);
+        const requestFailed = movieResult.success === false;
+
+        console.log(`getMovie> status_message: `, movieResult?.status_message);
+
+        // check if request failed
+        if (requestFailed) {
+          // failed to fetch new data
+          // set server error
           setMovie({});
           setMovieError(true);
-          setMovieErrorMessage(
-            movieResult?.status_message || 'Something went wrong',
-          );
+          setMovieErrorMessage(errors.SERVER_ERROR);
           setMovieLoading(false);
+
+          // stop here
           return;
         }
 
+        // if request succeeded continue
         setMovie(movieResult.data);
-        resetMovie();
+
+        // continue to reset
       }
     }
+
+    // now we have the data (cached or not)
+    // reset the error state
+    setMovieError(false);
+    setMovieErrorMessage('');
+
+    setMovieLoading(false);
   };
 
   const fetchSimilarMovies = async () => {
     setSimilarLoading(true);
-
     // check cache
     let cachedSimilarMovies = getCachedMoviesList('similar', movieId);
 
     if (cachedSimilarMovies) {
       setSimilarMovies(cachedSimilarMovies);
-      resetSimilar();
-      return;
+      // got cached data continue to reset
     } else {
-      if (!connected) {
+      // check internet
+      if (disconnected) {
+        // no cache and no internet
+        // set connection error
         setSimilarMovies([]);
         setSimilarError(true);
-        setSimilarErrorMessage('No internet connection');
+        setSimilarErrorMessage(errors.NO_CONNECTION);
         setSimilarLoading(false);
-        return;
-      } else {
-        let similarMoviesResult = await getSimilarMovies(movieId);
 
-        if (!similarMoviesResult.success) {
+        // stop here
+        return;
+      } else if (connected) {
+        // continue to fetch new data
+        let similarMoviesResult = await getSimilarMovies(movieId);
+        const requestFailed = similarMoviesResult.success === false;
+
+        console.log(
+          `getSimilarMovies> status_message: `,
+          similarMoviesResult?.status_message,
+        );
+
+        // check if request failed
+        if (requestFailed) {
+          // failed to fetch new data
+          // set server error
           setSimilarMovies([]);
           setSimilarError(true);
-          setSimilarErrorMessage(
-            similarMoviesResult?.status_message || 'Something went wrong',
-          );
+          setSimilarErrorMessage(errors.SERVER_ERROR);
           setSimilarLoading(false);
+
+          // stop here
           return;
         }
+
+        // if request succeeded continue
         setSimilarMovies(similarMoviesResult.data.results);
-        resetSimilar();
+
+        // continue to reset
       }
     }
+
+    // now we have the data (cached or not)
+    // reset the error state
+    setSimilarError(false);
+    setSimilarErrorMessage('');
+
+    setSimilarLoading(false);
   };
-
-  // check if empty on movie change
-  useEffect(() => {
-    // check if popular movies are empty
-    const isMovieEmpty = movie?.title === '';
-    if (isMovieEmpty) {
-      setMovieError(true);
-      setMovieErrorMessage('No movie found');
-      setMovieLoading(false);
-    }
-
-    // check if similar movies are empty
-    const isSimilarEmpty = similarMovies?.length === 0;
-    if (isSimilarEmpty) {
-      setSimilarError(true);
-      setSimilarErrorMessage('No movies found');
-      setSimilarLoading(false);
-    }
-  }, [movie, similarMovies]);
-
-  const reFetch = async () => {
-    await fetchMovie();
-    await fetchSimilarMovies();
-  };
-  // on first render
-  useEffect(() => {
-    console.log('rendered movie screen');
-
-    reFetch();
-  }, []);
-
-  // network change or value change
-  useEffect(() => {
-    reFetch();
-  }, [connected, movieId]);
 
   // get the vote out of five, new_rate = (old_rate/10) * 5
   const starsCount: number = movie
@@ -191,7 +204,7 @@ const MovieScreen = ({navigation}) => {
     <Screen noPadding>
       {/* Screen Body */}
       {movieError ? (
-        <Error customText={connected + movieErrorMessage} />
+        <Error customText={movieErrorMessage} />
       ) : movieLoading ? (
         <Loading title="Loading..." />
       ) : (
@@ -232,7 +245,8 @@ const MovieScreen = ({navigation}) => {
 
             {/* Info */}
             <Text className="justify-center mt-5 text-base font-semibold tracking-wider text-center align-middle text-neutral-400">
-              {movie?.status} • {year} • {stars}
+              {movie?.status} • {year ? year : 'Year unknown'} •{' '}
+              {stars ? stars : 'Not Rated'}
             </Text>
             {/* Genres */}
             <View className="flex-row flex-wrap justify-center gap-1 mt-2">
@@ -253,21 +267,29 @@ const MovieScreen = ({navigation}) => {
 
             {/* production_companies */}
             <SectionList<ICompany>
-              headerTitle="Production Companies"
+              headerTitle="Production ss Companies"
               data={movie?.production_companies}
               RenderItem={({item}) => <CompanyItem company={item} />}
               isLoading={false}
               noSeeMore
               className="mt-5"
+              errorMessage="No production companies found"
+              isError={movie?.production_companies.length === 0}
             />
 
             {/* Similar Movies */}
             <SectionList<IFullMovie>
+              data={similarMovies}
               headerTitle="Similar Movies"
               isLoading={similarLoading}
               isError={similarError}
-              errorMessage={similarErrorMessage}
-              data={similarMovies}
+              errorMessage={
+                similarErrorMessage
+                  ? similarErrorMessage
+                  : similarMovies.length === 0
+                  ? 'No similar movies found'
+                  : similarErrorMessage
+              }
               RenderItem={({item}) => (
                 <MovieCard
                   movie={item}
@@ -282,7 +304,6 @@ const MovieScreen = ({navigation}) => {
                   }}
                 />
               )}
-              fetchData={() => getSimilarMovies(movieId)}
               noSeeMore
               className="mt-5"
             />

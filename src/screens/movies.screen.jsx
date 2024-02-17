@@ -1,7 +1,7 @@
 import {Button, Platform, View, ScrollView} from 'react-native';
 import MoviesList from '../components/MoviesList';
 import Header from '../components/Header';
-import {data2, routes} from '../utils/CONSTANTS';
+import {data2, errors, routes} from '../utils/CONSTANTS';
 import AppBottom from '../components/AppBottom';
 import {Screen} from '../components/Screen';
 import {getPopularMovies, getTrendingMovies} from '../utils/api';
@@ -12,11 +12,14 @@ import Error from '../components/Error';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getCachedMoviesList} from '../utils/caching/cache';
 import useOffline from '../utils/hooks/useOffline';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const isIOS = Platform.OS === 'ios';
 
 const MoviesScreen = ({navigation}) => {
-  const connected = useOffline();
+  const netInfo = useNetInfo();
+  const connected = netInfo.isConnected;
+  const disconnected = !connected;
 
   const [popularMovies, setPopularMovies] = useState([]);
   const [popularLoading, setPopularLoading] = useState({});
@@ -27,106 +30,6 @@ const MoviesScreen = ({navigation}) => {
   const [trendingLoading, setTrendingLoading] = useState({});
   const [trendingError, setTrendingError] = useState(false);
   const [trendingErrorMessage, setTrendingErrorMessage] = useState('');
-
-  const resetPopular = () => {
-    setPopularError(false);
-    setPopularErrorMessage('');
-    setPopularLoading(false);
-  };
-  const resetTrending = () => {
-    setTrendingError(false);
-    setTrendingErrorMessage('');
-    setTrendingLoading(false);
-  };
-
-  const fetchPopularMovies = async () => {
-    setPopularLoading(true);
-
-    // check cache
-    let cachedPopularMovies = getCachedMoviesList('popular');
-    if (cachedPopularMovies) {
-      setPopularMovies(cachedPopularMovies);
-      resetPopular();
-      return;
-    } else {
-      if (!connected) {
-        setPopularMovies([]);
-        setPopularError(true);
-        setPopularErrorMessage('No internet connection');
-        setPopularLoading(false);
-        return;
-      }
-
-      let popularMoviesResult = await getPopularMovies();
-
-      if (!popularMoviesResult.success) {
-        setPopularMovies([]);
-        setPopularError(true);
-        setPopularErrorMessage(
-          popularMoviesResult?.status_message || 'Something went wrong',
-        );
-        setPopularLoading(false);
-        return;
-      }
-      setPopularMovies(popularMoviesResult.data.results);
-      resetPopular();
-    }
-  };
-
-  const fetchTrendingMovies = async () => {
-    setTrendingLoading(true);
-
-    // check cache
-    let cachedTrendingMovies = getCachedMoviesList('trending');
-    if (cachedTrendingMovies) {
-      setTrendingMovies(cachedTrendingMovies);
-      resetTrending();
-      return;
-    } else {
-      if (!connected) {
-        setTrendingMovies([]);
-        setTrendingError(true);
-        setTrendingErrorMessage('No internet connection');
-        setTrendingLoading(false);
-        return;
-      } else {
-        let trendingMoviesResult = await getTrendingMovies();
-
-        if (!trendingMoviesResult.success) {
-          setTrendingMovies([]);
-          setTrendingError(true);
-          setTrendingErrorMessage(
-            trendingMoviesResult?.status_message || 'Something went wrong',
-          );
-          setTrendingLoading(false);
-          return;
-        }
-        setTrendingMovies(trendingMoviesResult.data.results);
-        resetTrending();
-        return;
-      }
-    }
-  };
-
-  // check if empty on popular change
-  useEffect(() => {
-    // check if popular movies are empty
-    const isPopularEmpty = popularMovies?.length === 0;
-    if (isPopularEmpty) {
-      setPopularError(true);
-      setPopularErrorMessage('No movies found');
-      setPopularLoading(false);
-    }
-
-    // check if trending movies are empty
-    const isTrendingEmpty = trendingMovies?.length === 0;
-    if (isTrendingEmpty) {
-      setTrendingError(true);
-      setTrendingErrorMessage('No movies found');
-      setTrendingLoading(false);
-    }
-  }, [popularMovies, trendingMovies]);
-
   // on first render
   useEffect(() => {
     fetchTrendingMovies();
@@ -139,24 +42,140 @@ const MoviesScreen = ({navigation}) => {
     fetchPopularMovies();
   }, [connected]);
 
+  const fetchPopularMovies = async () => {
+    setPopularLoading(true);
+    setPopularError(false);
+    setPopularErrorMessage('');
+
+    // check cache
+    let cachedPopularMovies = getCachedMoviesList('popular');
+
+    if (cachedPopularMovies) {
+      setPopularMovies(cachedPopularMovies);
+      // got cached data continue to reset
+    } else {
+      // check internet
+      if (disconnected) {
+        // no cache and no internet
+        // set connection error
+        setPopularMovies([]);
+        setPopularError(true);
+        setPopularErrorMessage(errors.NO_CONNECTION);
+        setPopularLoading(false);
+
+        // stop here
+        return;
+      } else if (connected) {
+        // continue to fetch new data
+        let popularMoviesResult = await getPopularMovies();
+        const requestFailed = popularMoviesResult.success === false;
+        console.log(
+          `getPopularMovies> status_message: `,
+          popularMoviesResult?.status_message,
+        );
+
+        // check if request failed
+        if (requestFailed) {
+          // failed to fetch new data
+          // set server error
+          setPopularMovies([]);
+          setPopularError(true);
+          setPopularErrorMessage(errors.SERVER_ERROR);
+          setPopularLoading(false);
+
+          // stop here
+          return;
+        }
+
+        // if request succeeded continue
+        setPopularMovies(popularMoviesResult.data.results);
+        // continue to reset
+      }
+    }
+
+    // now we have the data (cached or not)
+    // reset the error state
+    setPopularError(false);
+    setPopularErrorMessage('');
+
+    setPopularLoading(false);
+  };
+
+  const fetchTrendingMovies = async () => {
+    setTrendingLoading(true);
+
+    // check cache
+    let cachedTrendingMovies = getCachedMoviesList('trending');
+    if (cachedTrendingMovies) {
+      setTrendingMovies(cachedTrendingMovies);
+      // got cached data continue to reset
+    } else {
+      // check internet
+      if (disconnected) {
+        // no cache and no internet
+        // set connection error
+        setTrendingMovies([]);
+        setTrendingError(true);
+        setTrendingErrorMessage(errors.NO_CONNECTION);
+        setTrendingLoading(false);
+
+        // stop here
+        return;
+      } else if (connected) {
+        // continue to fetch new data
+        let trendingMoviesResult = await getTrendingMovies();
+        const requestFailed = trendingMoviesResult.success === false;
+        console.log(
+          `getTrendingMovies> status_message: `,
+          trendingMoviesResult?.status_message,
+        );
+
+        // check if request failed
+        if (requestFailed) {
+          // failed to fetch new data
+          // set server error
+          setTrendingMovies([]);
+          setTrendingError(true);
+          setTrendingErrorMessage(errors.SERVER_ERROR);
+          setTrendingLoading(false);
+
+          // stop here
+          return;
+        }
+
+        // if request succeeded continue
+        setTrendingMovies(trendingMoviesResult.data.results);
+
+        // continue to reset
+      }
+    }
+
+    // now we have the data (cached or not)
+    // reset the error state
+    setTrendingError(false);
+    setTrendingErrorMessage('');
+
+    setTrendingLoading(false);
+  };
+
   return (
     <>
       <Screen>
-        <ScrollView>
-          <TrendingSection
-            data={trendingMovies}
-            isLoading={trendingLoading}
-            isError={trendingError}
-            errorMessage={trendingErrorMessage}
-          />
+        {/* <ScrollView> */}
+        <TrendingSection
+          data={trendingMovies}
+          isLoading={trendingLoading}
+          isError={trendingError}
+          errorMessage={trendingErrorMessage}
+        />
 
-          <MoviesList
-            movies={popularMovies}
-            isLoading={popularLoading}
-            isError={popularError}
-            errorMessage={popularErrorMessage}
-          />
-        </ScrollView>
+        <MoviesList
+          movies={popularMovies}
+          isLoading={popularLoading}
+          isError={popularError}
+          errorMessage={popularErrorMessage}
+        />
+        {/* </ScrollView> */}
       </Screen>
     </>
   );

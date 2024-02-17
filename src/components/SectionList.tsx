@@ -4,6 +4,7 @@ import AppText from './AppText';
 import Loading from './Loading';
 import SectionHeaderComponent from './SectionHeaderComponent';
 import Error from './Error';
+import {errors} from '../utils/CONSTANTS';
 
 interface IProps<T> extends PropsWithChildren<any> {
   data?: T[];
@@ -15,6 +16,8 @@ interface IProps<T> extends PropsWithChildren<any> {
   OnPressSeeMore?: () => void;
 
   isLoading: boolean;
+  isError: boolean;
+  errorMessage: string;
 }
 
 const SectionList = <T extends unknown>({
@@ -30,12 +33,8 @@ const SectionList = <T extends unknown>({
   OnPressSeeMore,
   ...props
 }: IProps<T>) => {
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
-    <View {...props}>
+    <View className="flex-1" {...props}>
       <SectionHeaderComponent title={headerTitle} onSeeMore={OnPressSeeMore} />
       {isLoading ? (
         <Loading />
@@ -45,7 +44,7 @@ const SectionList = <T extends unknown>({
         <FlatList
           data={data}
           renderItem={({item}) => <RenderItem item={item} />}
-          ListEmptyComponent={<AppText>No data</AppText>}
+          ListEmptyComponent={<Error customText={errors.EMPTY} />}
           keyExtractor={item => item.id.toString()}
           contentContainerStyle={{gap: 10}}
           horizontal
