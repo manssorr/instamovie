@@ -1,5 +1,5 @@
 import {NativeModules} from 'react-native';
-import {nativeGet} from '../NetworkingModule'; // Adjust this import
+import nativeGet from '../NetworkingModule'; // Adjust this import
 
 // Explicitly mock NativeModules
 jest.mock('react-native', () => {
