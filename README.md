@@ -1,17 +1,28 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
-### Design for offline flow v1
+
+## If iOS build fails please do this steps:
+
+### setting the build system to Legacy:
+
+1. Open the PROJECT_NAME.workspace file
+2. Then in the top menu select File > Workspace Settings
+3. Then change Build System to Legacy Build System
+
+## Design for offline flow v1
+
 <img width="1920" alt="Untitled from FigJam" src="https://github.com/manssorr/instamovie/assets/19681362/58c3297b-376b-4fde-94a4-267f06fea9bb">
 
-### Design for offline flow v2: More logic
+## Design for offline flow v2: More logic
+
 <img width="2336" alt="Untitled from" src="https://github.com/manssorr/instamovie/assets/19681362/6efed9f9-531a-49e4-a0c3-9a781c80a49f">
 
 ### Caching design
+
 <img width="2160" alt="Untitled from (1)" src="https://github.com/manssorr/instamovie/assets/19681362/7b356c9b-49e6-45ca-91b0-c7fc5810fb00">
 
-
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ## Step 1: Start the Metro Server
 

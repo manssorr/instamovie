@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from 'react';
 import {SafeAreaView, FlatList, FlatListProps} from 'react-native';
-import {data, errors} from '../utils/CONSTANTS';
+import {errors} from '../utils/CONSTANTS';
 import {type IMovie} from '../utils/types';
 import MovieCard from './MovieCard';
-import AppText from './AppText';
 import Loading from './Loading';
 import SectionHeaderComponent from './SectionHeaderComponent';
 import Error from './Error';

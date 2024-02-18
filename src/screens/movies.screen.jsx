@@ -160,8 +160,10 @@ const MoviesScreen = ({navigation}) => {
 
   return (
     <>
-      <Screen>
-        <ScrollView>
+      <Screen className="flex-1 w-full bg-green-900">
+        <ScrollView
+          className="flex-1 w-full bg-yellow-900"
+          showsVerticalScrollIndicator={false}>
           <TrendingSection
             data={trendingMovies}
             isLoading={trendingLoading}
