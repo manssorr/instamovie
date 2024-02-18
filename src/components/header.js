@@ -14,7 +14,7 @@ const Header = ({title, enableBack = false}: {title: string}) => {
           size={30}
           icon="back"
           color={colors.light}
-          className="p-4 px-8 "
+          className="py-4 pr-8 "
         />
       )}
       {title && (
