@@ -29,11 +29,11 @@ function MoivesStack() {
           headerStyle: {backgroundColor: colors.dark},
           headerTitle: props => (
             <Header
+              enableBack
               title={'Movie: ' + limitString(route.params.movie.title, 8)}
               {...props}
             />
           ),
-          headerTitleAlign: 'center',
         })}
       />
       <Stack.Screen
@@ -43,7 +43,7 @@ function MoivesStack() {
           headerBackVisible: false,
           headerStyle: {backgroundColor: colors.dark},
           headerTitle: props => (
-            <Header title="Trending this week" {...props} />
+            <Header enableBack title="Trending this week" {...props} />
           ),
           headerTitleAlign: 'center',
         })}
