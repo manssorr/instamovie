@@ -1,7 +1,7 @@
 import {Button, Platform, View, ScrollView} from 'react-native';
 import MoviesList from '../components/MoviesList';
 import Header from '../components/Header';
-import {data2, errors, routes} from '../utils/CONSTANTS';
+import {data2, errors, routes, spaces} from '../utils/CONSTANTS';
 import AppBottom from '../components/AppBottom';
 import {Screen} from '../components/Screen';
 import {getPopularMovies, getTrendingMovies} from '../utils/api';
@@ -160,23 +160,22 @@ const MoviesScreen = ({navigation}) => {
 
   return (
     <>
-      <Screen className="flex-1 w-full bg-green-900">
-        <ScrollView
-          className="flex-1 w-full bg-yellow-900"
-          showsVerticalScrollIndicator={false}>
+      <Screen noPadding>
+        <ScrollView>
           <TrendingSection
             data={trendingMovies}
             isLoading={trendingLoading}
             isError={trendingError}
             errorMessage={trendingErrorMessage}
           />
-
-          <MoviesList
-            movies={popularMovies}
-            isLoading={popularLoading}
-            isError={popularError}
-            errorMessage={popularErrorMessage}
-          />
+          <View className={`m-[${spaces.screenPadding}px]`}>
+            <MoviesList
+              movies={popularMovies}
+              isLoading={popularLoading}
+              isError={popularError}
+              errorMessage={popularErrorMessage}
+            />
+          </View>
         </ScrollView>
       </Screen>
     </>
