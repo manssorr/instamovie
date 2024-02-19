@@ -6049,6 +6049,11 @@ react-native-cache@^2.0.3:
   dependencies:
     "@react-native-async-storage/async-storage" "^1.13.4"
 
+react-native-eject@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-eject/-/react-native-eject-0.2.0.tgz#84b5bd123e883562e72801d23028bff062f9fbb3"
+  integrity sha512-muPhImNfKWa9hsdkrYeIkXM8/6lhZj3NnFCxI7kRrD3F50l6a6lc7crRWjg0i0aBt6XdkoE4efATjxCRkmTOFA==
+
 react-native-error-boundary@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/react-native-error-boundary/-/react-native-error-boundary-1.2.4.tgz#d700d1c23cdc18a17f6f14bd7d9f751a1f698c65"
