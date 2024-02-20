@@ -1,9 +1,7 @@
-import React, {useEffect} from 'react';
-import {Alert, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
 import CustomFallback from './components/ErrorFallback';
 import AppNavigator from './navigation/AppNavigator';
-import TestScreen from './screens/TestScreen';
 
 function App() {
   // return <TestScreen />;
