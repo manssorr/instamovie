@@ -1,7 +1,23 @@
 //@ts-nocheck
-import {View, Text, Image, ScrollView} from 'react-native';
-import {useRoute, type RouteProp} from '@react-navigation/native';
+
+// Libraries
 import {useEffect, useState} from 'react';
+import {View, Text, Image, ScrollView, StyleSheet} from 'react-native';
+import {useNetInfo} from '@react-native-community/netinfo';
+import {useRoute, type RouteProp} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+
+// Components
+import Loading from '../components/Loading';
+import {getMovie, getSimilarMovies} from '../utils/api';
+import AppText from '../components/AppText';
+import {Screen} from '../components/Screen';
+import SectionList from '../components/SectionList';
+import MovieCard from '../components/MovieCard';
+import Error from '../components/Error';
+
+// Utils
+import {getCachedMovie, getCachedMoviesList} from '../utils/caching/cache';
 import {
   Device,
   colors,
@@ -17,28 +33,10 @@ import {
   type ParamList,
   type ICompany,
 } from '../utils/types';
-import LinearGradient from 'react-native-linear-gradient';
-import Loading from '../components/Loading';
-import {getMovie, getSimilarMovies} from '../utils/api';
-import AppText from '../components/AppText';
-import {Screen} from '../components/Screen';
-import SectionList from '../components/SectionList';
-import MovieCard from '../components/MovieCard';
-import {getCachedMovie, getCachedMoviesList} from '../utils/caching/cache';
-import Error from '../components/Error';
-import {useNetInfo} from '@react-native-community/netinfo';
 import {useHeader} from '../utils/hooks/useHeader';
-import {SafeAreaInsetsStyle} from '../utils/hooks/useSafeAreaInsetsStyle';
+import {limitString} from '../utils/helperFunctions';
 
-const Genre = ({genre}: {genre: IGenre}) => {
-  return (
-    <View className="px-[5px] py-[2px] m-1 font-semibold rounded-lg bg-orange-200">
-      <AppText className="font-semibold text-neutral-700 ">
-        {genre.name}
-      </AppText>
-    </View>
-  );
-};
+const COMPANY_CARD_HEIGHT = Device.SCREEN_HEIGHT / 7;
 
 const MovieScreen = ({navigation}) => {
   const {
@@ -193,18 +191,12 @@ const MovieScreen = ({navigation}) => {
   const image = getImage(movie);
 
   useHeader({
-    title: `Movie: ${_movie?.title || 'N/A'}`,
+    title: `Movie: ${limitString(_movie.title, 20) || 'N/A'}`,
     leftIcon: 'back',
     leftIconColor: colors.light,
     onLeftPress: () => navigation.goBack(),
     titleMode: 'center',
-    SafeAreaInsetsStyle: {backgroundColor: 'pink'},
     navigation,
-
-    style: {
-      backgroundColor: 'green',
-      paddingHorizontal: 10,
-    },
   });
 
   return (
@@ -324,44 +316,54 @@ const MovieScreen = ({navigation}) => {
 export default MovieScreen;
 
 const CompanyItem = ({company}: {company: ICompany}) => {
-  const cardHeight = Device.SCREEN_HEIGHT / 7;
-
   const imageCoverExist = !!company.logo_path;
 
   return (
     <View
       className={'rounded-full'}
-      style={{
-        width: cardHeight,
-        height: cardHeight,
-        alignItems: 'center',
-        overflow: 'hidden',
-        padding: imageCoverExist ? 10 : 0,
-        backgroundColor: colors.light,
-      }}>
+      // eslint-disable-next-line react-native/no-inline-styles
+      style={[styles.$companyConainer]}>
       {imageCoverExist ? (
         <Image
           source={{uri: getImage500px(company.logo_path)}}
-          style={{
-            height: cardHeight - 20,
-            width: cardHeight - 20,
-            backgroundColor: colors.light,
-          }}
+          style={styles.$companyImageStyle}
           resizeMode="contain"
         />
       ) : (
-        <Image
-          source={noImage}
-          style={{
-            height: cardHeight,
-            width: cardHeight,
-            backgroundColor: colors.light,
-          }}
-          resizeMode="contain"
-        />
+        // write the company name inside a view if there is no image
+        <View
+          className="flex-col justify-center align-middle rounded-full bg-neutral-700"
+          style={styles.$companyConainer}>
+          <AppText className="font-semibold text-center text-white">
+            {company.name}
+          </AppText>
+        </View>
       )}
-
-      {/* <AppText>{limitString(company.name, 12)}</AppText> */}
     </View>
   );
 };
+const Genre = ({genre}: {genre: IGenre}) => {
+  return (
+    <View className="px-[5px] py-[2px] m-1 font-semibold rounded-lg bg-orange-200">
+      <AppText className="font-semibold text-neutral-700 ">
+        {genre.name}
+      </AppText>
+    </View>
+  );
+};
+const styles = StyleSheet.create({
+  $companyConainer: {
+    width: COMPANY_CARD_HEIGHT,
+    height: COMPANY_CARD_HEIGHT,
+    alignItems: 'center',
+    overflow: 'hidden',
+    backgroundColor: colors.dark,
+    borderColor: colors.light,
+    borderWidth: 0.5,
+  },
+  $companyImageStyle: {
+    height: COMPANY_CARD_HEIGHT,
+    width: COMPANY_CARD_HEIGHT,
+    backgroundColor: colors.light,
+  },
+});
