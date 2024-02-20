@@ -146,7 +146,6 @@ const MoviesScreen = ({navigation}) => {
 
   useHeader({
     title: 'Movies',
-    navigation,
   });
 
   return (

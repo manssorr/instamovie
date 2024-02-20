@@ -195,7 +195,6 @@ const MovieScreen = ({navigation}) => {
     leftIconColor: colors.light,
     onLeftPress: () => navigation.goBack(),
     titleMode: 'center',
-    navigation,
   });
 
   return (

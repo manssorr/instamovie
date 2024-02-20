@@ -4,6 +4,7 @@ import {Header, HeaderProps} from '../../components/Header.tsx';
 
 /**
  * A hook that can be used to easily set the Header of a react-navigation screen from within the screen's component.
+ *
  * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/utility/useHeader/}
  * @param {HeaderProps} headerProps - The props for the `Header` component.
  * @param {any[]} deps - The dependencies to watch for changes to update the header.
@@ -14,7 +15,15 @@ export function useHeader(
 ) {
   const navigation = useNavigation();
 
-  React.useEffect(() => {
+  // React.useEffect(() => {
+  //   navigation.setOptions({
+  //     headerShown: true,
+  //     header: () => <Header {...headerProps} />,
+  //   });
+  // }, [...deps, navigation]);
+
+  // will use useLayoutEffect instead of useEffect to avoid header rendering latency
+  React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
       header: () => <Header {...headerProps} />,

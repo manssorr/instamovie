@@ -57,7 +57,6 @@ const TrendingMoviesScreen = ({navigation}) => {
     leftIconColor: colors.light,
     onLeftPress: () => navigation.goBack(),
     titleMode: 'center',
-    navigation,
   });
 
   return (
