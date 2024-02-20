@@ -1,11 +1,11 @@
 import {Platform, ViewStyle, StyleSheet, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {spaces} from '../utils/CONSTANTS';
-import OfflineNotice from './OfflineNotice';
+import NetworkNotice from './NetworkNotice';
+import {useSafeAreaInsetsStyle} from '../utils/hooks/useSafeAreaInsetsStyle';
+import {useNavigation} from '@react-navigation/native';
 
-const edgesTabView = ['right', 'top', 'left'];
-const fixTopTabView = ['right', 'left', 'bottom'];
 const isIos = Platform.OS === 'ios';
 
 interface IProps extends React.ComponentProps<typeof SafeAreaView> {
@@ -21,38 +21,36 @@ export function Screen({
   inTabView = false,
   fixTop = isIos,
   noPadding = false,
-  style,
+  style: $styleOverride,
+
   ...props
 }: IProps) {
+  const navigation = useNavigation();
+
   const withPadding = !noPadding;
   const styles = styleSheet({...props, withPadding});
 
-  useEffect(() => {
-    console.log('Screen rendered');
-  }, []);
+  const $containerInsets = useSafeAreaInsetsStyle(
+    [fixTop ? '' : 'top', 'bottom'],
+    'padding',
+  );
 
   return (
-    <>
-      <View>
-        <OfflineNotice />
-      </View>
-      <SafeAreaView
-        className="container flex-1 bg-neutral-900"
-        style={[styles.container, style]}
-        edges={inTabView ? edgesTabView : fixTop ? fixTopTabView : undefined}
-        {...props}>
-        {children}
-      </SafeAreaView>
-    </>
+    <View
+      className="container flex-1 bg-neutral-900"
+      style={[styles.$container, $containerInsets, $styleOverride]}>
+      <NetworkNotice />
+
+      {children}
+    </View>
   );
 }
 
 // use params
 const styleSheet = (props: IProps | {withPadding: boolean}) =>
   StyleSheet.create({
-    container: {
-      flex: 1,
+    $container: {
+      // flex: 1,
       padding: props.withPadding ? spaces.screenPadding : 0,
-      paddingTop: 0,
     },
   });

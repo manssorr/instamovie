@@ -16,6 +16,8 @@ export const errors = {
   EMPTY: 'No data found!',
   SERVER_ERROR: 'Something went wrong while fetching data',
   NO_CONNECTION: "Can't load resources, please check your internet connection",
+  NO_CONNECTION_NOTICE: 'No Internet Connection.',
+  BACK_ONLINE_NOTICE: "You're online again.",
 };
 
 export const routes = {
