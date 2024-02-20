@@ -1,4 +1,4 @@
-import {SafeAreaView, FlatList, FlatListProps} from 'react-native';
+import {View, FlatList, FlatListProps, StyleSheet} from 'react-native';
 import {errors} from '../utils/CONSTANTS';
 import {type IMovie} from '../utils/types';
 import MovieCard from './MovieCard';
@@ -13,7 +13,7 @@ interface IProps extends FlatListProps<IMovie> {
 
 const MoviesList = ({movies, isLoading, isError, errorMessage}): IProps => {
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View className="">
       <SectionHeaderComponent title="Popular movies" />
       {isLoading ? (
         <Loading />
@@ -26,17 +26,28 @@ const MoviesList = ({movies, isLoading, isError, errorMessage}): IProps => {
           ListEmptyComponent={<Error customText={errors.EMPTY} />}
           numColumns={2}
           keyExtractor={item => item.id.toString()}
-          columnWrapperStyle={{justifyContent: 'space-between'}}
+          // columnWrapperStyle={{justifyContent: 'space-between'}}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{gap: 20}}
-          ListHeaderComponentStyle={{
-            // fix all movies header extra down space because of gap and the padding of the MovieCard
-            marginBottom: -20,
-          }}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default MoviesList;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  listHeader: {
+    marginBottom: 20,
+  },
+  gap20: {
+    gap: 20,
+  },
+  justifyBetween: {
+    justifyContent: 'space-between',
+  },
+});

@@ -3,7 +3,7 @@ import {NativeModules, Button, View} from 'react-native';
 import {getPoularMoviesList, getAllMoviesByPage} from '../utils/api';
 import AppButtom from '../components/AppBottom';
 import AppText from '../components/AppText';
-import storage, {clear, load, remove, save} from '../utils/caching/storage';
+import storage, {clear, load, remove, save} from '../utils/storage';
 import {
   cacheMovie,
   cacheMoviesList,
@@ -39,12 +39,12 @@ const TestScreen = () => {
   const getValue = async () => {
     // const resMovie = getCachedMovie(undefined);
     const resList = getCachedMoviesList('popular');
-    console.log(`resList`, resList);
+    console.log('resList', resList);
   };
 
   const getAll = () => {
     const res = storage.getAllKeys();
-    console.log(`All`, JSON.stringify(res, null, 2));
+    console.log('All', JSON.stringify(res, null, 2));
   };
   const clearValue = () => {
     clear();

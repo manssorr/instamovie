@@ -1,4 +1,3 @@
-import {View, Text, Button} from 'react-native';
 import AppText from './AppText';
 import {Screen} from './Screen';
 import AppBottom from './AppBottom';

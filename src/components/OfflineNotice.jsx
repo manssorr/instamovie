@@ -7,7 +7,9 @@ import useOffline from '../utils/hooks/useOffline';
 const OfflineNotice = ({}) => {
   const connected = useOffline();
 
-  if (connected) return null;
+  if (connected) {
+    return null;
+  }
   return (
     <View
       style={styles.container}

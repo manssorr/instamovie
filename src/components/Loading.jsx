@@ -1,5 +1,5 @@
 import {PropsWithChildren} from 'react';
-import {View, Text, Button, ActivityIndicator} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import AppText from './AppText';
 import {colors} from '../utils/CONSTANTS';
 

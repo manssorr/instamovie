@@ -98,7 +98,7 @@ const MovieScreen = ({navigation}) => {
         let movieResult = await getMovie(movieId);
         const requestFailed = movieResult.success === false;
 
-        console.log(`getMovie> status_message: `, movieResult?.status_message);
+        console.log('getMovie> status_message: ', movieResult?.status_message);
 
         // check if request failed
         if (requestFailed) {
@@ -154,7 +154,7 @@ const MovieScreen = ({navigation}) => {
         const requestFailed = similarMoviesResult.success === false;
 
         console.log(
-          `getSimilarMovies> status_message: `,
+          'getSimilarMovies> status_message: ',
           similarMoviesResult?.status_message,
         );
 

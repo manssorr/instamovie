@@ -6,7 +6,7 @@ import {cacheMovie, cacheMoviesList} from './caching/cache';
 const isAndroid = Platform.OS === 'android';
 
 const apiCall = async (endpoint, params): IResponse => {
-  console.log(`apiCall called at: `, endpoint);
+  console.log('apiCall called at: ', endpoint);
   const options = {
     method: 'GET',
     params: {

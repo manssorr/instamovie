@@ -21,7 +21,7 @@
  */
 
 import moment from 'moment';
-import {load, remove, save} from './storage';
+import {load, remove, save} from '../storage';
 import {type IFullMovie} from '../../utils/types';
 
 type listTypes =
@@ -119,7 +119,9 @@ const get = (key): ICachedItem['value'] | null => {
   try {
     const item = load(concatStrings(prefixs.cache, key));
 
-    if (!item) return null;
+    if (!item) {
+      return null;
+    }
 
     if (isExpired(item)) {
       remove(concatStrings(prefixs.cache, key));

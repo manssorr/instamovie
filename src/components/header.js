@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Button, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import {Icon} from './AppIcon';
 import {colors} from '../utils/CONSTANTS';
 

@@ -1,17 +1,11 @@
-import {Button, Platform, View, ScrollView} from 'react-native';
+import {Platform, View, ScrollView} from 'react-native';
 import MoviesList from '../components/MoviesList';
-import Header from '../components/Header';
-import {data2, errors, routes, spaces} from '../utils/CONSTANTS';
-import AppBottom from '../components/AppBottom';
+import {errors, spaces} from '../utils/CONSTANTS';
 import {Screen} from '../components/Screen';
 import {getPopularMovies, getTrendingMovies} from '../utils/api';
 import {useEffect, useState} from 'react';
 import TrendingSection from '../components/TrendingSection';
-import SectionHeaderComponent from '../components/SectionHeaderComponent';
-import Error from '../components/Error';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {getCachedMoviesList} from '../utils/caching/cache';
-import useOffline from '../utils/hooks/useOffline';
 import {useNetInfo} from '@react-native-community/netinfo';
 
 const isIOS = Platform.OS === 'ios';
@@ -70,7 +64,7 @@ const MoviesScreen = ({navigation}) => {
         let popularMoviesResult = await getPopularMovies();
         const requestFailed = popularMoviesResult.success === false;
         console.log(
-          `getPopularMovies> status_message: `,
+          'getPopularMovies> status_message: ',
           popularMoviesResult?.status_message,
         );
 
@@ -126,7 +120,7 @@ const MoviesScreen = ({navigation}) => {
         let trendingMoviesResult = await getTrendingMovies();
         const requestFailed = trendingMoviesResult.success === false;
         console.log(
-          `getTrendingMovies> status_message: `,
+          'getTrendingMovies> status_message: ',
           trendingMoviesResult?.status_message,
         );
 
