@@ -13,7 +13,7 @@ import {
 } from '../utils/hooks/useSafeAreaInsetsStyle';
 import {Icon, IconTypes} from './AppIcon';
 import AppText from './AppText';
-import {colors} from '../utils/CONSTANTS';
+import {colors, spaces} from '../utils/CONSTANTS';
 
 export interface HeaderProps {
   /**
@@ -130,10 +130,11 @@ export function Header(props: HeaderProps) {
     safeAreaEdges = ['top'],
     title,
     titleMode = 'center',
-    titleContainerStyle: $titleContainerStyleOverride,
+
     style: $styleOverride,
-    titleStyle: $titleStyleOverride,
     containerStyle: $containerStyleOverride,
+    titleStyle: $titleStyleOverride,
+    titleContainerStyle: $titleContainerStyleOverride,
   } = props;
 
   const $containerInsets = useSafeAreaInsetsStyle(safeAreaEdges);
@@ -249,7 +250,7 @@ const $actionTextContainer: ViewStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   height: '100%',
-  // paddingHorizontal: spacing.md,
+  paddingHorizontal: spaces.medium,
   zIndex: 2,
 };
 
@@ -262,7 +263,7 @@ const $actionIconContainer: ViewStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   height: '100%',
-  // paddingHorizontal: spacing.md,
+  paddingHorizontal: spaces.small,
   zIndex: 2,
 };
 
@@ -276,7 +277,7 @@ const $titleWrapperCenter: ViewStyle = {
   height: '100%',
   width: '100%',
   position: 'absolute',
-  // paddingHorizontal: spacing.xxl,
+  paddingHorizontal: spaces.large,
   zIndex: 1,
 };
 

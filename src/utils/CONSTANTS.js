@@ -1,5 +1,7 @@
 import {Dimensions} from 'react-native';
 import {IMovie} from './types';
+import tailwindColors from 'tailwindcss/colors';
+import tailwindTheme from 'tailwindcss/defaultTheme';
 
 // this should be env file.
 const BASE_URL = 'https://api.themoviedb.org/3/';

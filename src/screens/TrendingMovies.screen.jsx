@@ -4,6 +4,8 @@ import {getTrendingMovies} from '../utils/api';
 import {useEffect, useState} from 'react';
 import {getCachedMoviesList} from '../utils/caching/cache';
 import useOffline from '../utils/hooks/useOffline';
+import {useHeader} from '../utils/hooks/useHeader';
+import {colors} from '../utils/CONSTANTS';
 
 const TrendingMoviesScreen = ({navigation}) => {
   const connected = useOffline();
@@ -48,6 +50,15 @@ const TrendingMoviesScreen = ({navigation}) => {
   useEffect(() => {
     fetchTrendingMovies();
   }, []);
+
+  useHeader({
+    title: 'Trending this week',
+    leftIcon: 'back',
+    leftIconColor: colors.light,
+    onLeftPress: () => navigation.goBack(),
+    titleMode: 'center',
+    navigation,
+  });
 
   return (
     <>
