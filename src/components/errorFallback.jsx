@@ -1,10 +1,14 @@
 import AppText from './AppText';
 import {Screen} from './Screen';
 import AppBottom from './AppBottom';
+import {useSafeAreaInsetsStyle} from '../utils/hooks/useSafeAreaInsetsStyle';
+import {StyleSheet} from 'react-native';
 
 const CustomFallback = (props: {error: Error, resetError: Function}) => {
+  const $containerInsets = useSafeAreaInsetsStyle(['top'], 'padding');
+
   return (
-    <Screen className="flex-1 p-3 mt-[56px]">
+    <Screen style={[styles.$container, $containerInsets]}>
       {/* Error */}
       <AppText className="pb-10 text-3xl">Something happened!</AppText>
 
@@ -24,3 +28,10 @@ const CustomFallback = (props: {error: Error, resetError: Function}) => {
 };
 
 export default CustomFallback;
+
+const styles = StyleSheet.create({
+  $container: {
+    flex: 1,
+    paddingTop: 5,
+  },
+});
