@@ -1,14 +1,22 @@
 import {Platform, View, ScrollView, StyleSheet} from 'react-native';
 import MoviesList from '../components/MoviesList';
-import {errors, keysForSharedElements, spaces} from '../utils/CONSTANTS';
+import {
+  errors,
+  keysForSharedElements,
+  routes,
+  spaces,
+} from '../utils/CONSTANTS';
 import {Screen} from '../components/Screen';
 import {getPopularMovies, getTrendingMovies} from '../utils/api';
 import {useEffect, useState} from 'react';
 import TrendingSection from '../components/TrendingSection';
+import AppButtom from '../components/AppBottom';
+
 import {getCachedMoviesList} from '../utils/caching/cache';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useHeader} from '../utils/hooks/useHeader';
 import CustomFallback from '../components/ErrorFallback';
+import TestScreen from './TestScreen';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -149,28 +157,31 @@ const MoviesScreen = ({navigation}) => {
   });
 
   return (
-    <>
-      <Screen noPadding>
-        {/* <ScrollView> */}
-        <TrendingSection
-          data={trendingMovies}
-          isLoading={trendingLoading}
-          isError={trendingError}
-          errorMessage={trendingErrorMessage}
-          uniqueKey="trending"
+    <Screen noPadding>
+      {/* <ScrollView> */}
+      <TrendingSection
+        data={trendingMovies}
+        isLoading={trendingLoading}
+        isError={trendingError}
+        errorMessage={trendingErrorMessage}
+        uniqueKey="trending"
+      />
+      <AppButtom
+        title="Go Test"
+        onPress={() => navigation.navigate(routes.TEST)}
+        wrapperStyle={{marginBottom: 20}}
+      />
+      <View style={styles.MoviesListContainerStyle}>
+        <MoviesList
+          movies={popularMovies}
+          isLoading={popularLoading}
+          isError={popularError}
+          errorMessage={popularErrorMessage}
+          uniqueKey={keysForSharedElements.KEY_1}
         />
-        <View style={styles.MoviesListContainerStyle}>
-          <MoviesList
-            movies={popularMovies}
-            isLoading={popularLoading}
-            isError={popularError}
-            errorMessage={popularErrorMessage}
-            uniqueKey={keysForSharedElements.KEY_1}
-          />
-        </View>
-        {/* </ScrollView> */}
-      </Screen>
-    </>
+      </View>
+      {/* </ScrollView> */}
+    </Screen>
   );
 };
 

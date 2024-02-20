@@ -31,6 +31,7 @@ export const routes = {
   MOVIES: 'Movies',
   TRENDING: 'Trending',
   MOVIE: 'Movie',
+  TEST: 'Test',
 };
 
 export const colors = {

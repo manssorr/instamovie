@@ -34,7 +34,7 @@ export function Screen({
 
   return (
     <View
-      className="container flex-1 bg-neutral-900"
+      className="flex-1 bg-neutral-900"
       style={[styles.$container, $containerInsets, $styleOverride]}>
       <NetworkNotice />
 

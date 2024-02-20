@@ -1,74 +1,48 @@
-import React from 'react';
-import {NativeModules, Button, View} from 'react-native';
-import {getPoularMoviesList, getAllMoviesByPage} from '../utils/api';
+import {View} from 'react-native';
 import AppButtom from '../components/AppBottom';
-import AppText from '../components/AppText';
-import storage, {clear, load, remove, save} from '../utils/storage';
-import {
-  cacheMovie,
-  cacheMoviesList,
-  getCachedMovie,
-  getCachedMoviesList,
-} from '../utils/caching/cache';
-const {CalendarModule} = NativeModules;
+import {Screen} from '../components/Screen';
+import Notice from '../components/Notice';
+import {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {routes} from '../utils/CONSTANTS';
 
 const TestScreen = () => {
-  const [value, setValue] = React.useState('');
+  const navigation = useNavigation();
+  const [show, setShow] = useState(false);
 
-  const BASE_URL = 'https://api.themoviedb.org/3/';
-  const API_KEY = 'b4cdf243de74de7898c5475998831984';
-  const endpoint = 'discover/movie';
-
-  const url = BASE_URL + endpoint + `?api_key=${API_KEY}`;
-  // fetch('https://jsonplaceholder.typicode.com/todos/1')
-  //   .then(response => response.json())
-  const onSubmit = async () => {
-    const response = await getPoularMoviesList();
+  const showNotice = () => {
+    setShow(true);
   };
-
-  const settingValue = () => {
-    const movieFakeData = {title: 'test'};
-    const listFakeData = [{title: 'test1'}, {title: 'test2'}, {title: 'test3'}];
-
-    cacheMovie('123', movieFakeData);
-
-    cacheMoviesList('similar', listFakeData, '123');
-    // cacheMoviesList('', undefined);
-  };
-
-  const getValue = async () => {
-    // const resMovie = getCachedMovie(undefined);
-    const resList = getCachedMoviesList('popular');
-    console.log('resList', resList);
-  };
-
-  const getAll = () => {
-    const res = storage.getAllKeys();
-    console.log('All', JSON.stringify(res, null, 2));
-  };
-  const clearValue = () => {
-    clear();
+  const hideNotice = () => {
+    setShow(false);
   };
 
   return (
-    <View className="justify-between flex-1 py-40 align-middle bg-neutral-900">
-      <AppButtom
-        title="Click to invoke your native module!"
-        color="#841584"
-        onPress={onSubmit}
-      />
-      <AppButtom title="Save value" color="#841584" onPress={settingValue} />
-
-      <AppButtom title="Get value" color="#841584" onPress={getValue} />
-
-      <AppButtom title="Get All" color="#841584" onPress={getAll} />
-
-      <AppButtom title="Clear" color="#841584" onPress={clearValue} />
-
-      <AppText className="p-3 text-xl font-bold text-center text-white bg-orange-300">
-        {value ? value.title : 'No Value'}
-      </AppText>
-    </View>
+    <Screen className="flex-1" noPadding fixTop={false}>
+      <Notice show={show} backgroundColor="bg-blue-500" message="Test Notice" />
+      <View className="flex-1 ">
+        <AppButtom
+          title="Show Notice"
+          onPress={showNotice}
+          wrapperStyle={{marginBottom: 20}}
+        />
+        <AppButtom
+          title="test"
+          onPress={() => console.log('test')}
+          wrapperStyle={{marginBottom: 20}}
+        />
+        <AppButtom
+          title="Hide Notice"
+          onPress={hideNotice}
+          wrapperStyle={{marginBottom: 20}}
+        />
+        <AppButtom
+          title="Home"
+          onPress={() => navigation.navigate(routes.MOVIES)}
+          wrapperStyle={{marginBottom: 20}}
+        />
+      </View>
+    </Screen>
   );
 };
 

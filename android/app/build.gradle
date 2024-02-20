@@ -76,7 +76,7 @@ android {
 
     namespace "com.instamovie"
     defaultConfig {
-        applicationId "com.instamovie"
+        applicationId "com.instamovie.release"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
