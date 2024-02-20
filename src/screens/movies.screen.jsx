@@ -8,6 +8,7 @@ import TrendingSection from '../components/TrendingSection';
 import {getCachedMoviesList} from '../utils/caching/cache';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useHeader} from '../utils/hooks/useHeader';
+import CustomFallback from '../components/ErrorFallback';
 
 const isIOS = Platform.OS === 'ios';
 

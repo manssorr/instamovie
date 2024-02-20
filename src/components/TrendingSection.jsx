@@ -2,7 +2,7 @@ import Carousel from 'react-native-snap-carousel';
 import {View} from 'react-native';
 import MovieCard from './MovieCard';
 import Loading from './Loading';
-import {Device, errors, routes} from '../utils/CONSTANTS';
+import {Device, errors, routes, spaces} from '../utils/CONSTANTS';
 import SectionHeaderComponent from './SectionHeaderComponent';
 import {useNavigation} from '@react-navigation/native';
 import Error from './Error';
@@ -14,6 +14,7 @@ const TrendingSection = ({data, isLoading, isError, errorMessage}) => {
       <SectionHeaderComponent
         title="Trending this week"
         onSeeMore={() => navigation.navigate(routes.TRENDING)}
+        style={{marginHorizontal: spaces.screenPadding}}
       />
 
       {isLoading ? (

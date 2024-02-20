@@ -1,20 +1,26 @@
+import React from 'react';
 import AppText from './AppText';
 import {Screen} from './Screen';
 import AppBottom from './AppBottom';
-import {useSafeAreaInsetsStyle} from '../utils/hooks/useSafeAreaInsetsStyle';
 import {StyleSheet} from 'react-native';
 
-const CustomFallback = (props: {error: Error, resetError: Function}) => {
-  const $containerInsets = useSafeAreaInsetsStyle(['top'], 'padding');
+type IProps = {
+  error: Error,
+  resetError: Function,
+};
 
+const CustomFallback = (
+  props = {error: new Error(''), resetError: () => alert('error')},
+): React.JSX.Element<IProps> => {
+  console.log(`props`, props);
   return (
-    <Screen style={[styles.$container, $containerInsets]}>
+    <Screen style={[styles.$container]}>
       {/* Error */}
       <AppText className="pb-10 text-3xl">Something happened!</AppText>
 
       {/* Error */}
       <AppText className="w-full p-1 mb-4 text-lg text-red-700 border-2 border-red-500 bg-neutral-400">
-        {props.error.toString()}
+        {props.error?.toString()}
       </AppText>
 
       {/* Try again button */}

@@ -24,7 +24,6 @@ import {
   errors,
   getImage,
   getImage500px,
-  noImage,
   routes,
 } from '../utils/CONSTANTS';
 import {
@@ -217,6 +216,7 @@ const MovieScreen = ({navigation}) => {
                 height: Device.SCREEN_HEIGHT / 2,
                 width: Device.SCREEN_WIDTH,
               }}
+              resizeMode="cover"
             />
 
             {/* Upper Mask layer */}

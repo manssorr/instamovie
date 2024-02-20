@@ -8,7 +8,7 @@ interface IProps {
 
 const Error = ({customText = errors.GENERIC}): React.ReactElement<IProps> => {
   return (
-    <View className="py-2 rounded-sm bg-neutral-800">
+    <View className="w-screen py-2 rounded-sm bg-neutral-800">
       <AppText className="self-center w-4/6 text-center text-neutral-300 ">
         {customText}
       </AppText>

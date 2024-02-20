@@ -1,25 +1,27 @@
 import AppText from './AppText';
-import {View, FlatList, TouchableOpacity} from 'react-native';
+import {View, StyleProp, ViewStyle, TouchableOpacity} from 'react-native';
 
 const SectionHeaderComponent = ({
   title,
   onSeeMore,
+  style: $styleOverride,
 }: {
   title: string,
   onSeeMore?: Function,
+  style?: StyleProp<ViewStyle>,
 }) => {
   return (
-    <View>
-      <View className="flex-row justify-between align-middle">
-        <AppText className="pb-1 text-xl font-bold">{title}</AppText>
-        {onSeeMore && (
-          <TouchableOpacity onPress={onSeeMore}>
-            <AppText className="pb-1 text-xl font-bold text-orange-200">
-              See All
-            </AppText>
-          </TouchableOpacity>
-        )}
-      </View>
+    <View
+      className="flex-row justify-between align-middle"
+      style={$styleOverride}>
+      <AppText className="pb-1 text-xl font-bold">{title}</AppText>
+      {onSeeMore && (
+        <TouchableOpacity onPress={onSeeMore}>
+          <AppText className="pb-1 text-xl font-bold text-orange-200">
+            See All
+          </AppText>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

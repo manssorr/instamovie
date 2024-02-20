@@ -61,16 +61,14 @@ const TrendingMoviesScreen = ({navigation}) => {
   });
 
   return (
-    <>
-      <Screen>
-        <MoviesList
-          movies={trendingMovies}
-          isLoading={isLoading}
-          isError={isError}
-          errorMessage={errorMessage}
-        />
-      </Screen>
-    </>
+    <Screen>
+      <MoviesList
+        movies={trendingMovies}
+        isLoading={isLoading}
+        isError={isError}
+        errorMessage={errorMessage}
+      />
+    </Screen>
   );
 };
 
