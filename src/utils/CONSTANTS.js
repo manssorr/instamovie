@@ -808,7 +808,7 @@ export const fakeImage =
 export const getImage500px = path => `https://image.tmdb.org/t/p/w500/${path}`;
 export const getImage342px = path => `https://image.tmdb.org/t/p/w500/${path}`;
 export const getImage185px = path => `https://image.tmdb.org/t/p/w500/${path}`;
-export const noImage = require('../assets/no-image.webp');
+export const noImage = require('../../assets/no-image.webp');
 
 //  utils
 export const getImage = (movie): IMovie => {

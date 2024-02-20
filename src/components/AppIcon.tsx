@@ -84,16 +84,16 @@ export function Icon(props: IconProps) {
 }
 
 export const iconRegistry = {
-  back: require('../assets/icons/back.png'),
-  caretLeft: require('../assets/icons/caretLeft.png'),
-  caretRight: require('../assets/icons/caretRight.png'),
-  check: require('../assets/icons/check.png'),
-  heart: require('../assets/icons/heart.png'), // @demo remove-current-line
-  hidden: require('../assets/icons/hidden.png'),
-  menu: require('../assets/icons/menu.png'),
-  more: require('../assets/icons/more.png'),
-  settings: require('../assets/icons/settings.png'),
-  x: require('../assets/icons/x.png'),
+  back: require('../../assets/icons/back.png'),
+  caretLeft: require('../../assets/icons/caretLeft.png'),
+  caretRight: require('../../assets/icons/caretRight.png'),
+  check: require('../../assets/icons/check.png'),
+  heart: require('../../assets/icons/heart.png'), // @demo remove-current-line
+  hidden: require('../../assets/icons/hidden.png'),
+  menu: require('../../assets/icons/menu.png'),
+  more: require('../../assets/icons/more.png'),
+  settings: require('../../assets/icons/settings.png'),
+  x: require('../../assets/icons/x.png'),
 };
 
 const imageStyleBase: ImageStyle = {
