@@ -198,7 +198,9 @@ function HeaderAction(props: HeaderActionProps): JSX.Element {
 
   const content = text;
 
-  if (ActionComponent) return ActionComponent;
+  if (ActionComponent) {
+    return ActionComponent;
+  }
 
   if (content) {
     return (

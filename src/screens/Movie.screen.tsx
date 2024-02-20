@@ -318,10 +318,7 @@ const CompanyItem = ({company}: {company: ICompany}) => {
   const imageCoverExist = !!company.logo_path;
 
   return (
-    <View
-      className={'rounded-full'}
-      // eslint-disable-next-line react-native/no-inline-styles
-      style={[styles.$companyConainer]}>
+    <View className={'rounded-full'} style={[styles.$companyConainer]}>
       {imageCoverExist ? (
         <Image
           source={{uri: getImage500px(company.logo_path)}}

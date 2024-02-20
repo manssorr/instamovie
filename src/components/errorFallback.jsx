@@ -12,7 +12,7 @@ type IProps = {
 const CustomFallback = (
   props = {error: new Error(''), resetError: () => alert('error')},
 ): React.JSX.Element<IProps> => {
-  console.log(`props`, props);
+  console.log('props', props);
   return (
     <Screen style={[styles.$container]}>
       {/* Error */}

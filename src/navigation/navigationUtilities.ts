@@ -38,7 +38,9 @@ export function getActiveRouteName(
   const route = state.routes[state.index ?? 0];
 
   // Found the active route -- return the name
-  if (!route.state) return route.name as keyof AppStackParamList;
+  if (!route.state) {
+    return route.name as keyof AppStackParamList;
+  }
 
   // Recursive call to deal with nested routers
   return getActiveRouteName(route.state as NavigationState<AppStackParamList>);
@@ -53,7 +55,9 @@ export function getActiveRouteName(
  */
 export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
   // ignore unless android... no back button!
-  if (Platform.OS !== 'android') return;
+  if (Platform.OS !== 'android') {
+    return;
+  }
 
   // The reason we're using a ref here is because we need to be able
   // to update the canExit function without re-setting up all the listeners
@@ -107,9 +111,15 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
 function navigationRestoredDefaultState(
   persistNavigation: PersistNavigationConfig,
 ) {
-  if (persistNavigation === 'always') return false;
-  if (persistNavigation === 'dev' && __DEV__) return false;
-  if (persistNavigation === 'prod' && !__DEV__) return false;
+  if (persistNavigation === 'always') {
+    return false;
+  }
+  if (persistNavigation === 'dev' && __DEV__) {
+    return false;
+  }
+  if (persistNavigation === 'prod' && !__DEV__) {
+    return false;
+  }
 
   // all other cases, disable restoration by returning true
   return true;
@@ -159,14 +169,20 @@ export function useNavigationPersistence(
       const state = (await storage.load(persistenceKey)) as
         | NavigationProps['initialState']
         | null;
-      if (state) setInitialNavigationState(state);
+      if (state) {
+        setInitialNavigationState(state);
+      }
     } finally {
-      if (isMounted()) setIsRestored(true);
+      if (isMounted()) {
+        setIsRestored(true);
+      }
     }
   };
 
   useEffect(() => {
-    if (!isRestored) restoreState();
+    if (!isRestored) {
+      restoreState();
+    }
   }, [isRestored]);
 
   return {

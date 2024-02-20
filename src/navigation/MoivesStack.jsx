@@ -3,8 +3,10 @@ import MoviesScreen from '../screens/Movies.screen';
 import MovieScreen from '../screens/Movie.screen';
 import {routes} from '../utils/CONSTANTS';
 import TrendingMoviesScreen from '../screens/TrendingMovies.screen';
+import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
-const Stack = createNativeStackNavigator();
+// const Stack = createNativeStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 function MoivesStack() {
   return (
@@ -20,6 +22,10 @@ function MoivesStack() {
         name={routes.MOVIE}
         component={MovieScreen}
         options={({navigation, route}) => ({})}
+        sharedElements={(route, otherRoute, showing) => {
+          const {movie} = route.params;
+          return [`movie.${movie.id}.photo`];
+        }}
       />
       <Stack.Screen
         name={routes.TRENDING}
