@@ -1,4 +1,4 @@
-import {Platform, View, ScrollView} from 'react-native';
+import {Platform, View, ScrollView, StyleSheet} from 'react-native';
 import MoviesList from '../components/MoviesList';
 import {errors, spaces} from '../utils/CONSTANTS';
 import {Screen} from '../components/Screen';
@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react';
 import TrendingSection from '../components/TrendingSection';
 import {getCachedMoviesList} from '../utils/caching/cache';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useHeader} from '../utils/hooks/useHeader';
 
 const isIOS = Platform.OS === 'ios';
 
@@ -63,11 +64,6 @@ const MoviesScreen = ({navigation}) => {
         // continue to fetch new data
         let popularMoviesResult = await getPopularMovies();
         const requestFailed = popularMoviesResult.success === false;
-        console.log(
-          'getPopularMovies> status_message: ',
-          popularMoviesResult?.status_message,
-        );
-
         // check if request failed
         if (requestFailed) {
           // failed to fetch new data
@@ -119,11 +115,6 @@ const MoviesScreen = ({navigation}) => {
         // continue to fetch new data
         let trendingMoviesResult = await getTrendingMovies();
         const requestFailed = trendingMoviesResult.success === false;
-        console.log(
-          'getTrendingMovies> status_message: ',
-          trendingMoviesResult?.status_message,
-        );
-
         // check if request failed
         if (requestFailed) {
           // failed to fetch new data
@@ -152,6 +143,11 @@ const MoviesScreen = ({navigation}) => {
     setTrendingLoading(false);
   };
 
+  useHeader({
+    title: 'Movies',
+    navigation,
+  });
+
   return (
     <>
       <Screen noPadding>
@@ -162,7 +158,7 @@ const MoviesScreen = ({navigation}) => {
           isError={trendingError}
           errorMessage={trendingErrorMessage}
         />
-        <View className={`m-[${spaces.screenPadding}px]`}>
+        <View style={styles.MoviesListContainerStyle}>
           <MoviesList
             movies={popularMovies}
             isLoading={popularLoading}
@@ -177,3 +173,9 @@ const MoviesScreen = ({navigation}) => {
 };
 
 export default MoviesScreen;
+
+const styles = StyleSheet.create({
+  MoviesListContainerStyle: {
+    marginHorizontal: spaces.screenPadding,
+  },
+});

@@ -1,9 +1,9 @@
 import {PropsWithChildren} from 'react';
-import {Text, StyleSheet, TextStyle} from 'react-native';
+import {Text, StyleSheet, TextStyle, StyleProp} from 'react-native';
 import {colors} from '../utils/CONSTANTS';
 
 interface Props extends PropsWithChildren<any> {
-  style?: TextStyle;
+  style?: TextStyle | (TextStyle | StyleProp<TextStyle>)[];
 }
 
 const AppText = ({children, style, ...props}: Props) => {

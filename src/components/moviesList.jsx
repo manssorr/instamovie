@@ -26,9 +26,9 @@ const MoviesList = ({movies, isLoading, isError, errorMessage}): IProps => {
           ListEmptyComponent={<Error customText={errors.EMPTY} />}
           numColumns={2}
           keyExtractor={item => item.id.toString()}
-          // columnWrapperStyle={{justifyContent: 'space-between'}}
+          columnWrapperStyle={styles.columnWrapperStyle}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{gap: 20}}
+          contentContainerStyle={styles.contentContainerStyle}
         />
       )}
     </View>
@@ -38,16 +38,13 @@ const MoviesList = ({movies, isLoading, isError, errorMessage}): IProps => {
 export default MoviesList;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   listHeader: {
     marginBottom: 20,
   },
-  gap20: {
+  contentContainerStyle: {
     gap: 20,
   },
-  justifyBetween: {
+  columnWrapperStyle: {
     justifyContent: 'space-between',
   },
 });

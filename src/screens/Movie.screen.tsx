@@ -1,5 +1,5 @@
 //@ts-nocheck
-import {View, Text, Image, ScrollView, Alert} from 'react-native';
+import {View, Text, Image, ScrollView} from 'react-native';
 import {useRoute, type RouteProp} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import {
@@ -24,10 +24,11 @@ import AppText from '../components/AppText';
 import {Screen} from '../components/Screen';
 import SectionList from '../components/SectionList';
 import MovieCard from '../components/MovieCard';
-import useOffline from '../utils/hooks/useOffline';
 import {getCachedMovie, getCachedMoviesList} from '../utils/caching/cache';
 import Error from '../components/Error';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useHeader} from '../utils/hooks/useHeader';
+import {SafeAreaInsetsStyle} from '../utils/hooks/useSafeAreaInsetsStyle';
 
 const Genre = ({genre}: {genre: IGenre}) => {
   return (
@@ -41,7 +42,7 @@ const Genre = ({genre}: {genre: IGenre}) => {
 
 const MovieScreen = ({navigation}) => {
   const {
-    params: {movieId},
+    params: {movieId, movie: _movie},
   } = useRoute<RouteProp<ParamList, 'Movie'>>();
   const netInfo = useNetInfo();
   const connected = netInfo.isConnected;
@@ -97,9 +98,6 @@ const MovieScreen = ({navigation}) => {
         // continue to fetch new data
         let movieResult = await getMovie(movieId);
         const requestFailed = movieResult.success === false;
-
-        console.log('getMovie> status_message: ', movieResult?.status_message);
-
         // check if request failed
         if (requestFailed) {
           // failed to fetch new data
@@ -152,12 +150,6 @@ const MovieScreen = ({navigation}) => {
         // continue to fetch new data
         let similarMoviesResult = await getSimilarMovies(movieId);
         const requestFailed = similarMoviesResult.success === false;
-
-        console.log(
-          'getSimilarMovies> status_message: ',
-          similarMoviesResult?.status_message,
-        );
-
         // check if request failed
         if (requestFailed) {
           // failed to fetch new data
@@ -199,6 +191,21 @@ const MovieScreen = ({navigation}) => {
   const year = movie ? new Date(movie.release_date).getFullYear() : 'N/A';
 
   const image = getImage(movie);
+
+  useHeader({
+    title: `Movie: ${_movie?.title || 'N/A'}`,
+    leftIcon: 'back',
+    leftIconColor: colors.light,
+    onLeftPress: () => navigation.goBack(),
+    titleMode: 'center',
+    SafeAreaInsetsStyle: {backgroundColor: 'pink'},
+    navigation,
+
+    style: {
+      backgroundColor: 'green',
+      paddingHorizontal: 10,
+    },
+  });
 
   return (
     <Screen noPadding>
