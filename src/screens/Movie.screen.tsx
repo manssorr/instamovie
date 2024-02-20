@@ -24,6 +24,7 @@ import {
   errors,
   getImage,
   getImage500px,
+  keysForSharedElements,
   routes,
 } from '../utils/CONSTANTS';
 import {
@@ -34,6 +35,7 @@ import {
 } from '../utils/types';
 import {useHeader} from '../utils/hooks/useHeader';
 import {limitString} from '../utils/helperFunctions';
+import Animated from 'react-native-reanimated';
 
 const COMPANY_CARD_HEIGHT = Device.SCREEN_HEIGHT / 7;
 
@@ -209,7 +211,8 @@ const MovieScreen = ({navigation}) => {
           {/* Movie Poster Header */}
           <View className="">
             {/* Back image */}
-            <Image
+            <Animated.Image
+              sharedTransitionTag={`movie_${movie?.id}_back_${keysForSharedElements.KEY_1}`}
               source={image}
               style={{
                 height: Device.SCREEN_HEIGHT / 2,

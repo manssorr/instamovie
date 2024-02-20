@@ -1,6 +1,6 @@
 import {Platform, View, ScrollView, StyleSheet} from 'react-native';
 import MoviesList from '../components/MoviesList';
-import {errors, spaces} from '../utils/CONSTANTS';
+import {errors, keysForSharedElements, spaces} from '../utils/CONSTANTS';
 import {Screen} from '../components/Screen';
 import {getPopularMovies, getTrendingMovies} from '../utils/api';
 import {useEffect, useState} from 'react';
@@ -157,6 +157,7 @@ const MoviesScreen = ({navigation}) => {
           isLoading={trendingLoading}
           isError={trendingError}
           errorMessage={trendingErrorMessage}
+          uniqueKey="trending"
         />
         <View style={styles.MoviesListContainerStyle}>
           <MoviesList
@@ -164,6 +165,7 @@ const MoviesScreen = ({navigation}) => {
             isLoading={popularLoading}
             isError={popularError}
             errorMessage={popularErrorMessage}
+            uniqueKey={keysForSharedElements.KEY_1}
           />
         </View>
         {/* </ScrollView> */}

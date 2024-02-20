@@ -7,7 +7,13 @@ import SectionHeaderComponent from './SectionHeaderComponent';
 import {useNavigation} from '@react-navigation/native';
 import Error from './Error';
 
-const TrendingSection = ({data, isLoading, isError, errorMessage}) => {
+const TrendingSection = ({
+  data,
+  isLoading,
+  isError,
+  errorMessage,
+  uniqueKey,
+}) => {
   const navigation = useNavigation();
   return (
     <View className="mb-2 ">
@@ -31,6 +37,7 @@ const TrendingSection = ({data, isLoading, isError, errorMessage}) => {
               cardWidth={Device.SCREEN_WIDTH * 0.6}
               className="rounded-3xl"
               noTitle
+              uniqueKey={uniqueKey}
             />
           )}
           firstItem={1}

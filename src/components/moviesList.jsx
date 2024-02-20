@@ -9,9 +9,21 @@ import Error from './Error';
 interface IProps extends FlatListProps<IMovie> {
   children: any;
   movies: any[];
+
+  isLoading: boolean;
+  isError: boolean;
+  errorMessage: string;
+  uniqueKey: string;
 }
 
-const MoviesList = ({movies, isLoading, isError, errorMessage}): IProps => {
+const MoviesList = ({
+  movies,
+
+  isLoading,
+  isError,
+  errorMessage,
+  uniqueKey,
+}): IProps => {
   return (
     <View className="">
       <SectionHeaderComponent title="Popular movies" />
@@ -22,7 +34,9 @@ const MoviesList = ({movies, isLoading, isError, errorMessage}): IProps => {
       ) : (
         <FlatList
           data={movies}
-          renderItem={({item}) => <MovieCard movie={item} />}
+          renderItem={({item}) => (
+            <MovieCard movie={item} uniqueKey={uniqueKey} />
+          )}
           ListEmptyComponent={<Error customText={errors.EMPTY} />}
           numColumns={2}
           keyExtractor={item => item.id.toString()}

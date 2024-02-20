@@ -3,6 +3,8 @@ import {Device, getImage, routes, spaces} from '../utils/CONSTANTS';
 import {limitString} from '../utils/helperFunctions';
 import {IMovie} from '../utils/types';
 import {View, Text, Image, TouchableWithoutFeedback} from 'react-native';
+import Animated from 'react-native-reanimated';
+// import Animated from 'react-native-reanimated';
 
 const MovieCard = ({
   movie,
@@ -11,13 +13,15 @@ const MovieCard = ({
   onPress,
 
   noTitle,
-
+  uniqueKey,
   ...rest
 }: {
   movie: IMovie,
   cardWidth?: number,
   cardHeight?: number,
+  onPress?: () => void,
   noTitle?: boolean,
+  uniqueKey?: string,
 }) => {
   const navigation = useNavigation();
 
@@ -54,7 +58,8 @@ const MovieCard = ({
       <TouchableWithoutFeedback onPress={onPress ? onPress : navigateMovie}>
         <View className="flex-col">
           {/* <Image source={{uri: `${BASE_URL}${movie.poster_path}`}} /> */}
-          <Image
+          <Animated.Image
+            sharedTransitionTag={`movie_${movie?.id}_back_${uniqueKey}`}
             source={image}
             className="rounded-2xl"
             resizeMode="cover"

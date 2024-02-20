@@ -4,7 +4,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {spaces} from '../utils/CONSTANTS';
 import NetworkNotice from './NetworkNotice';
 import {useSafeAreaInsetsStyle} from '../utils/hooks/useSafeAreaInsetsStyle';
-import {useNavigation} from '@react-navigation/native';
 
 const isIos = Platform.OS === 'ios';
 
@@ -25,8 +24,6 @@ export function Screen({
 
   ...props
 }: IProps) {
-  const navigation = useNavigation();
-
   const withPadding = !noPadding;
   const styles = styleSheet({...props, withPadding});
 

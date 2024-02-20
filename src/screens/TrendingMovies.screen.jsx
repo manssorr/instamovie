@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import {getCachedMoviesList} from '../utils/caching/cache';
 import useOffline from '../utils/hooks/useOffline';
 import {useHeader} from '../utils/hooks/useHeader';
-import {colors} from '../utils/CONSTANTS';
+import {colors, keysForSharedElements} from '../utils/CONSTANTS';
 
 const TrendingMoviesScreen = ({navigation}) => {
   const connected = useOffline();
@@ -66,6 +66,7 @@ const TrendingMoviesScreen = ({navigation}) => {
         isLoading={isLoading}
         isError={isError}
         errorMessage={errorMessage}
+        uniqueKey={keysForSharedElements.KEY_1}
       />
     </Screen>
   );

@@ -29,7 +29,7 @@ function AppNavigator() {
   useBackButtonHandler(routeName => exitRoutes.includes(routeName));
 
   return (
-    <NavigationContainer ref={navigationRef} {...Config.persistNavigation}>
+    <NavigationContainer ref={navigationRef}>
       <MoivesStack />
     </NavigationContainer>
   );

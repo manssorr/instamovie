@@ -20,6 +20,13 @@ export const errors = {
   BACK_ONLINE_NOTICE: "You're online again.",
 };
 
+export const keysForSharedElements = {
+  KEY_1: 'key-1',
+  KEY_2: 'key-2',
+  KEY_3: 'key-3',
+  KEY_4: 'key-4',
+};
+
 export const routes = {
   MOVIES: 'Movies',
   TRENDING: 'Trending',
