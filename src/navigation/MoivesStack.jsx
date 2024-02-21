@@ -3,7 +3,7 @@ import MovieScreen from '../screens/Movie.screen';
 import {routes} from '../utils/CONSTANTS';
 import TrendingMoviesScreen from '../screens/TrendingMovies.screen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import TestScreen from '../screens/TestScreen';
+import TestScreen from '../screens/Test.screen';
 
 const Stack = createNativeStackNavigator();
 

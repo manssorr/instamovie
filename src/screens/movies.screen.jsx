@@ -16,7 +16,7 @@ import {getCachedMoviesList} from '../utils/caching/cache';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useHeader} from '../utils/hooks/useHeader';
 import CustomFallback from '../components/ErrorFallback';
-import TestScreen from './TestScreen';
+import TestScreen from './Test.screen';
 
 const isIOS = Platform.OS === 'ios';
 
